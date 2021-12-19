@@ -86,8 +86,8 @@ def main():
         subprocess.check_output("pause", shell=True)
         return
 
-    worksheet_number = 0  # sheet number 지정
-    worksheet_name = "Sheet" + str(worksheet_number)  # read.xlsx의 worksheet 이름
+    worksheet_number = 0                                # sheet number 지정
+    worksheet_name = "Sheet" + str(worksheet_number)    # read.xlsx의 worksheet 이름
     load_ws = wb_read[worksheet_name]
 
     data1 = pd.read_excel(read_xlsx, sheet_name=worksheet_name)                     # read 파일 읽기 1~6
@@ -120,7 +120,7 @@ def main():
     if (len(df_read) < 10000):
         ws.append(excel_header)
 
-    else:                                                  # write.xlsx에 입력해야할 행이 10000개 이상일시 sheet를 한개 더 추가
+    else:                                                            # write.xlsx에 입력해야할 행이 10000개 이상일시 sheet를 한개 더 추가
         worksheet_number += 1
         worksheet_name = "Sheet" + str(worksheet_number)
         wb_write.create_sheet(worksheet_name)
@@ -129,8 +129,8 @@ def main():
 
     #### 데이터 입력 시작 ####
     df_LuKID = df_read['A15 LuK ID']
-    p = re.compile('M([\d]*)')                          # 정규표현식을 미리 컴파일 해두는것
-    for i in range(0, len(df_read)):                    # read파일에 있는 A15 LuK ID의 갯수만큼 for문
+    p = re.compile('M([\d]*)')                                      # 정규표현식을 미리 컴파일 해두는것
+    for i in range(0, len(df_read)):                                # read파일에 있는 A15 LuK ID의 갯수만큼 for문
         DocID_Info_line = data2["A15 LuK ID"].str.contains(df_LuKID[i])
         Save_DocID_Info_line = data2[DocID_Info_line]
         if Save_DocID_Info_line.empty:
@@ -140,7 +140,7 @@ def main():
         data_row = Save_DocID_Info_line.loc[:, ['Text', "A15 LuK ID", "A05 Safety Integrity", "A25 Status Commitment Supplier - MCA LG", "A27 Delivery Date"]]
         data_row = data_row.values.tolist()[0]                         # Text, A15 LuK ID, A05 Safety Integrity, A25 Status Commitment Supplier - MCA LG, A27 Delivery Date 추출 완료//
 
-        if data_row[4] == '':                                           # data_row[4] 는 A27 Delivery Date에 대한 정보 M10, M11, n/a 같은 // str(data_row[4]) == 'nan' 로 바꿔야 하나?
+        if data_row[4] == '':                                          # data_row[4] 는 A27 Delivery Date에 대한 정보 M10, M11, n/a 같은 // str(data_row[4]) == 'nan' 로 바꿔야 하나?
             data_row[4] = 'in-review'
         elif data_row[4] =='all milestones':
             data_row[4] = 'all milestones'
@@ -151,19 +151,20 @@ def main():
             else:
                 cr_delivery_milestone = 1
 
-        if (int(cr_delivery_milestone) != 0) & (int(cr_delivery_milestone) <= implementation_criteria):                           #implementation_criteria = 12 , cr_delivery_milesone이 0이 아니고 숫자가 12보다 작은 경우
-            if minor_criteria in str(data_row[4]):                                                                              #cr_delivery = M10, M11, n/a같은 / minor_criteria = 'Patch#2'
+        if (int(cr_delivery_milestone) != 0) & (int(cr_delivery_milestone) <= implementation_criteria):                      #implementation_criteria = 12 , cr_delivery_milesone이 0이 아니고 숫자가 12보다 작은 경우
+            if minor_criteria in str(data_row[4]):                                                                           #cr_delivery = M10, M11, n/a같은 / minor_criteria = 'Patch#2'
                 cr_delivery_milestone = 'not implemented'
             else:
                 cr_delivery_milestone = 'implemented'                                                                        #거의 다 이쪽 실행
         else:
             cr_delivery_milestone = 'not implemented'
-            ########################################
-        data_row.append(cr_delivery_milestone)
 
-        Decom_temp = Save_DocID_Info_line.loc[:, ["Decomposes To"]]   # DecomposesTo ID 임시 저장소
+        data_row.append(cr_delivery_milestone)                           # cr_delivery_milestone 추출 완료//
+
+        Decom_temp = Save_DocID_Info_line.loc[:, ["Decomposes To"]]      # DecomposesTo ID 임시 저장소
         Decom_temp = Decom_temp.values.tolist()[0]
         DecomID_data_row = Decom_temp[0]
+
         if str(DecomID_data_row) != 'nan':
             DecomID_data_row = DecomID_data_row.split(',')
             DecomID_length = len(DecomID_data_row)
@@ -176,15 +177,14 @@ def main():
                 SysRSID = SysID_data_row[0]
                 SysTsID_data_row = SysID_data_row[1]
                 SwID_data_row = SysID_data_row[2]
-                ########################################
 
                 if str(SysTsID_data_row) != 'nan':
                     SysTsID_data_row = SysTsID_data_row.split(',')
                     SysTsID_length = len(SysTsID_data_row)
                     for i in range(0, SysTsID_length):
-                        SysTsID = SysTsID_data_row[i].replace("?","").lstrip().rstrip()
+                        SysTsID = SysTsID_data_row[i].replace("?", "").lstrip().rstrip()
                         SysTSID_Info_line = df_SysSwTS.loc[df_SysSwTS['ID'] == int(SysTsID)]
-                        SysTSID_data_row = SysTSID_Info_line.loc[:, ["ENG ID","Test Method"]]
+                        SysTSID_data_row = SysTSID_Info_line.loc[:, ["ENG ID", "Test Method"]]
                         if SysTSID_data_row.empty:
                             SysTSID_data_row = ['n/a', 'n/a']
                             TC_Review_Status = 'n/a'
@@ -198,7 +198,7 @@ def main():
                         else:
                             SysTSID_temp = SysTSID_temp.values.tolist()[0][0]
                             TC_Result_Info_line = df_TestResult.loc[df_TestResult["TC ID"] == int(SysTSID_temp)]
-                            TC_Result_data_row = TC_Result_Info_line.loc[:, ["Session ID","Test Result"]]
+                            TC_Result_data_row = TC_Result_Info_line.loc[:, ["Session ID", "Test Result"]]
                             if TC_Result_data_row.empty:
                                 TC_Result = 'NT'
                             else:
@@ -226,9 +226,9 @@ def main():
                     SwID_data_row = SwID_data_row.split(',')
                     SwID_length = len(SwID_data_row)
                     for i in range(0, SwID_length):
-                        SwID = SwID_data_row[i].replace("?","").lstrip().rstrip()
+                        SwID = SwID_data_row[i].replace("?", "").lstrip().rstrip()
                         SwID_Info_line = df_SwID.loc[df_SwID['ID'] == int(SwID)]
-                        SwID_data_row = SwID_Info_line.loc[:, ["ENG ID","Validated By"]]
+                        SwID_data_row = SwID_Info_line.loc[:, ["ENG ID", "Validated By"]]
                         if SwID_data_row.empty:
                             SwID_data_row = ['n/a', 'n/a']
                         else:
@@ -240,9 +240,9 @@ def main():
                             SwTsID_ValidatedBy = SwTsID_data_row.split(",")
                             SwTsID_length = len(SwTsID_ValidatedBy)
                             for i in range(0, SwTsID_length):
-                                SwTsID = SwTsID_ValidatedBy[i].replace("?","").lstrip().rstrip()
+                                SwTsID = SwTsID_ValidatedBy[i].replace("?", "").lstrip().rstrip()
                                 SwTSID_Info_line = df_SysSwTS.loc[df_SysSwTS['ID'] == int(SwTsID)]
-                                SwTSID_data_row = SwTSID_Info_line.loc[:, ["ENG ID","Test Method"]]
+                                SwTSID_data_row = SwTSID_Info_line.loc[:, ["ENG ID", "Test Method"]]
                                 if SwTSID_data_row.empty:
                                     SwTSID_data_row = ['n/a', 'n/a']
                                     TC_Review_Status = 'n/a'
@@ -256,7 +256,7 @@ def main():
                                 else:
                                     SwTSID_temp = SwTSID_temp.values.tolist()[0][0]
                                     TC_Result_Info_line = df_TestResult.loc[df_TestResult["TC ID"] == int(SwTSID_temp)]
-                                    TC_Result_data_row = TC_Result_Info_line.loc[:, ["Session ID","Test Result"]]
+                                    TC_Result_data_row = TC_Result_Info_line.loc[:, ["Session ID", "Test Result"]]
                                     if TC_Result_data_row.empty:
                                         TC_Result = 'NT'
                                     else:
