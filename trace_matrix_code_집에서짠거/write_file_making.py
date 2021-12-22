@@ -42,6 +42,8 @@ def main():
     global TC_Review_Status
 
     implementation_criteria = 12
+    row_temp_first = 2
+    row_temp = 2
     minor_criteria = 'Patch#2'
 
     user_id_pw = [' ', ' ']
@@ -110,7 +112,7 @@ def main():
 
     excel_header = ['CR Text', 'CR ID', 'ASIL Level', 'Acceptance LG against LuK requirement', 'Planned implementation milestone/date',
                     'Implementation state', 'If test: Test ID', 'Verification method',
-                    'Test case review status', 'Test result' + str(test_session_id), 'Verification status', 'SysRS ID', 'SwRS ID',
+                    'Test case review status', 'Test result' + str(test_session_id), 'Verification status', 'SysRS ID', 'SwRS ID', 'All TC Pass Status',
                     'If NOK or test not possible, add rational and write action planned']
     if (len(df_read) < 10000):
         ws.append(excel_header)
@@ -125,12 +127,14 @@ def main():
     #### 데이터 입력 시작 ####
     df_LuKID = df_read['A15 LuK ID']
     p = re.compile('M([\d]*)')                                      # 정규표현식을 미리 컴파일 해두는것
-    for i in range(0, len(df_read)):                                # read파일에 있는 A15 LuK ID의 갯수만큼 for문
-        DocID_Info_line = data2["A15 LuK ID"].str.contains(df_LuKID[i])
+    for j in range(0, len(df_read)):                                # read파일에 있는 A15 LuK ID의 갯수만큼 for문
+        All_TC_Pass_data = []
+        DocID_Info_line = data2["A15 LuK ID"].str.contains(df_LuKID[j])
         Save_DocID_Info_line = data2[DocID_Info_line]
         if Save_DocID_Info_line.empty:
             data_row = ['WRONG CR ID', 'WRONG CR ID']
             ws.append(data_row)
+            row_temp += 1
             continue
         data_row = Save_DocID_Info_line.loc[:, ['Text', "A15 LuK ID", "A05 Safety Integrity", "A25 Status Commitment Supplier - MCA LG", "A27 Delivery Date"]]
         data_row = data_row.values.tolist()[0]                         # Text, A15 LuK ID, A05 Safety Integrity, A25 Status Commitment Supplier - MCA LG, A27 Delivery Date 추출 완료//
@@ -172,6 +176,7 @@ def main():
                 SysID_Info_line = df_SysID.loc[df_SysID['ID'] == int(DecomposesToID)]
                 if SysID_Info_line.empty:
                     ws.append(data_row)
+                    row_temp += 1
                     continue
                 SysID_data_row = SysID_Info_line.loc[:, ["ENG ID", "Validated By", "Satisfied By"]]
                 SysID_data_row = SysID_data_row.values.tolist()[0]
@@ -212,6 +217,11 @@ def main():
                         row_data.append(TC_Result)
 
                         if str('Passed') in str(TC_Result):
+                            All_TC_Pass_data.append('P')
+                        else:
+                            All_TC_Pass_data.append('F')
+
+                        if str('Passed') in str(TC_Result):
                             verification_status = 'finished'
                         elif str('Failed') in str(TC_Result):
                             verification_status = 'not finished'
@@ -223,6 +233,7 @@ def main():
                         row_data.append(verification_status)
                         row_data.append(SysRSID)
                         ws.append(row_data)
+                        row_temp += 1
 
                 if str(SwID_row) != 'nan':
                     SwID_row = SwID_row.split(',')
@@ -235,6 +246,7 @@ def main():
                         if SwID_Info_line.empty:
                             row_data = data_row + [' ', ' ', ' ', ' ', ' ', SysRSID]
                             ws.append(row_data)
+                            row_temp += 1
                             continue
                         else:
                             SwID_data_row = SwID_data_row.values.tolist()[0]
@@ -274,6 +286,11 @@ def main():
                                 row_data.append(TC_Result)
 
                                 if str('Passed') in str(TC_Result):
+                                    All_TC_Pass_data.append('P')
+                                else:
+                                    All_TC_Pass_data.append('F')
+
+                                if str('Passed') in str(TC_Result):
                                     verification_status = 'finished'
                                 elif str('Failed') in str(TC_Result):
                                     verification_status = 'not finished'
@@ -287,10 +304,22 @@ def main():
                                 row_data.append(' ')
                                 row_data.append(SwRSID)
                                 ws.append(row_data)
+                                row_temp += 1
+
+        if 'F' in All_TC_Pass_data:
+            All_TC_Pass = "All TC Not Pass"
+        else:
+            All_TC_Pass = "All TC Pass"
+
+        if j == 0:
+            row_temp = row_temp_first
+
+        ws.cell(row_temp, 14).value = All_TC_Pass
+
 
 
     #### 데이터 입력 종료 ####
-    wb_write.save("test_write1.xlsx")
+    wb_write.save("test_write_v104.5.xlsx")
     wb_write.close()
 
 main()
