@@ -55,7 +55,7 @@ def main():
     SysID_Info_xls = "SysID_Info.xls"
     SwID_Info_xls = "SwID_Info.xls"
     SysSwTS_Info_xls = "SysSwTSID_Info.xls"
-    TestResult_csv = "TestResult_Info.csv"
+    TestResult_csv = "TestResult_Info_v104.5.csv"
     ########################## testsession.txt 파일 읽기 ##########################
     try:
         with open(test_session_txt, 'rt') as in_file:
@@ -168,6 +168,10 @@ def main():
         Decom_temp = Decom_temp.values.tolist()[0]
         DecomID_data_row = Decom_temp[0]
 
+        Short_temp = Save_DocID_Info_line.loc[:, ["Short Description"]]
+        Short_temp = Short_temp.values.tolist()[0]
+        Short_temp = Short_temp[0]
+
         if str(DecomID_data_row) != 'nan':
             DecomID_data_row = DecomID_data_row.split(',')
             DecomID_length = len(DecomID_data_row)
@@ -226,7 +230,7 @@ def main():
                         elif str('Failed') in str(TC_Result):
                             verification_status = 'not finished'
                         else:
-                            if cr_short_description == 1:
+                            if Short_temp == 'finished':
                                 verification_status = 'finished'
                             else:
                                 verification_status = 'not finished'
@@ -295,7 +299,7 @@ def main():
                                 elif str('Failed') in str(TC_Result):
                                     verification_status = 'not finished'
                                 else:
-                                    if cr_short_description == 1:
+                                    if Short_temp == 'finished':
                                         verification_status = 'finished'
                                     else:
                                         verification_status = 'not finished'
@@ -325,4 +329,4 @@ def main():
 main()
 
 end = time.time()
-print(f"write파일이 만드는데 까지 걸리는 시간 : {end - start:.5f} sec")
+print(f"Write파일이 만드는데 까지 걸리는 시간 : {end - start:.5f} sec")

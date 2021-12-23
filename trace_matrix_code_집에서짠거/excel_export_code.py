@@ -23,12 +23,13 @@ SwRS2ID = '1394006'
 SwRS3ID = '1469578'
 SysTCID = '1454824'
 SwTCID = '1464826'
+SysITSID = '1454310'
 
 now = datetime.datetime.now()
 today = now.strftime('%Y-%m-%d %H:%M')
 nowtime = now.strftime('%m%d_%H%M')
 outputFileName_GetTestResult = 'getTestResult_Test'+nowtime+'.xls'
-outputFileName_GetTestResult_SysSwTS = 'getTestResult_Test_SysSwTS'+nowtime+'.xls'
+outputFileName_GetTestResult_SysSwTS = 'getTestResult_Test_SysSwSysITS'+nowtime+'.xls'
 
 def main():
 
@@ -52,19 +53,19 @@ def main():
     SysID_Info_xls = "SysID_Info.xls"
     SwID_Info_xls = "SwID_Info.xls"
     SysSwTS_Info_xls = "SysSwTSID_Info.xls"
-    TestResult_csv = "TestResult_Info.csv"
+    TestResult_csv = "TestResult_Info_v104.5.csv"
 
-    #QueryDefinition_GetTestResult = '((field["Document ID"]='+DocID+')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    #QueryDefinition_GetTestResult_SysSwTS = '((field["Document ID"]='+SwTCID+')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_GetTestResult = '((field["Document ID"]='+DocID+')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    #QueryDefinition_GetTestResult_SysSwTS = '((field["Document ID"]='+SysITSID+')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
 
     # 추출할 item filed 정의
-    #itemExportFields = '"Document ID",ID,"A15 LuK ID",Text,"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A25 Status Commitment Supplier - MCA LG HMC","A27 Delivery Date","Short Description","Decomposes To"'
+    itemExportFields = '"Document ID",ID,"A15 LuK ID",Text,"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"'
     #itemExportFields_SysSwTS = '"Document ID",ID,"ENG ID","Test Method"'
 
     # exporting Non traced items of specific document
-    #export_doc_cmd = 'im exportissues --outputFile=' + outputFileName_GetTestResult + ' --fields=' + itemExportFields + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult
+    export_doc_cmd = 'im exportissues --outputFile=' + outputFileName_GetTestResult + ' --fields=' + itemExportFields + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult
     #export_doc_cmd_SysSwTS = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysSwTS + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysSwTS
-    #subprocess.Popen(export_doc_cmd)
+    subprocess.Popen(export_doc_cmd)
     #subprocess.Popen(export_doc_cmd_SysSwTS)
 
     try:
