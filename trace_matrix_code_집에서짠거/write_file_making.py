@@ -55,7 +55,7 @@ def main():
     SwID_Info_xls = "SwID_Info.xls"
     SysSwTS_Info_xls = "SysSwTSID_Info.xls"                                 # 고정
 
-    read_xlsx = "read_v104.7.xls"                                     # 변경
+    read_xlsx = "read_v104.7.xls"                                           # 변경
     test_session_txt = "testsession_v104.7.txt"                             # 변경
     TestResult_csv = "TestResult_Info_v104.7.csv"                           # 변경
     ########################## testsession.txt 파일 읽기 ##########################
