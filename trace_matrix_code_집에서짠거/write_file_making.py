@@ -48,14 +48,16 @@ def main():
 
     user_id_pw = [' ', ' ']
     # Get test session IDs
-    test_session_txt = "testsession_v104.5.txt"
+
     user_name_txt = "user.txt"
-    read_xlsx = "DocID_Info_v104.5.xls"
-    DocID_Info_xls = "DocID_Info_v104.5.xls"
+    DocID_Info_xls = "DocID_Info.xls"
     SysID_Info_xls = "SysID_Info.xls"
     SwID_Info_xls = "SwID_Info.xls"
-    SysSwTS_Info_xls = "SysSwTSID_Info.xls"
-    TestResult_csv = "TestResult_Info_v104.5.csv"
+    SysSwTS_Info_xls = "SysSwTSID_Info.xls"                                 # 고정
+
+    read_xlsx = "DocID_Info_v104.5.xls"                                     # 변경
+    test_session_txt = "testsession_v104.5.txt"                             # 변경
+    TestResult_csv = "TestResult_Info_v104.5.csv"                           # 변경
     ########################## testsession.txt 파일 읽기 ##########################
     try:
         with open(test_session_txt, 'rt') as in_file:
