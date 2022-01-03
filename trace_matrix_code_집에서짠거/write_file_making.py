@@ -54,9 +54,9 @@ def main():
     SwID_Info_xls = "SwID_Info.xls"
     SysSwTS_Info_xls = "SysSwTSID_Info.xls"                                 # 고정
 
-    read_xlsx = "read_v203.4.xls"                                           # 변경
-    test_session_txt = "testsession_v203.4.txt"                             # 변경
-    TestResult_csv = "TestResult_Info_v203.4.csv"                           # 변경
+    read_xlsx = "read_v104.7.xls"                                           # 변경
+    test_session_txt = "testsession_v104.7.txt"                             # 변경
+    TestResult_csv = "TestResult_Info_v104.7.csv"                           # 변경
     ########################## testsession.txt 파일 읽기 ##########################
     try:
         with open(test_session_txt, 'rt') as in_file:
@@ -180,8 +180,8 @@ def main():
                 DecomposesToID = DecomID_data_row[i].replace("?", "").lstrip().rstrip()
                 SysID_Info_line = df_SysID.loc[df_SysID['ID'] == int(DecomposesToID)]
                 if SysID_Info_line.empty:
-                    ws.append(data_row)
-                    row_temp += 1
+                    #ws.append(data_row)
+                    #row_temp += 1
                     continue
                 SysID_data_row = SysID_Info_line.loc[:, ["ENG ID", "Validated By", "Satisfied By"]]
                 SysID_data_row = SysID_data_row.values.tolist()[0]
@@ -249,9 +249,9 @@ def main():
                         SwID_Info_line = df_SwID.loc[df_SwID['ID'] == int(SwID)]
                         SwID_data_row = SwID_Info_line.loc[:, ["ENG ID", "Validated By"]]
                         if SwID_Info_line.empty:
-                            row_data = data_row + [' ', ' ', ' ', ' ', ' ', SysRSID]
-                            ws.append(row_data)
-                            row_temp += 1
+                            #row_data = data_row + [' ', ' ', ' ', ' ', ' ', SysRSID]
+                            #ws.append(row_data)
+                            #row_temp += 1
                             continue
                         else:
                             SwID_data_row = SwID_data_row.values.tolist()[0]
@@ -324,7 +324,7 @@ def main():
 
 
     #### 데이터 입력 종료 ####
-    wb_write.save("TraceMatrix_v203.4.xlsx")
+    wb_write.save("TraceMatrix_v104.7.xlsx")
     wb_write.close()
 
 main()
