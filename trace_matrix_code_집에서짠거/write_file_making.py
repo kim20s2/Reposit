@@ -34,7 +34,6 @@ def main():
     global user_id_pw
     global implementation_criteria
     global minor_criteria
-    global skip_string
     global LukID_temp
     global SwID_length
     global SysID_length
