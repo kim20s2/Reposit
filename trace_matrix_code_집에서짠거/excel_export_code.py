@@ -18,6 +18,7 @@ DocID = '1226890'     # 1226890
 SysRS1ID = '1351133'
 SysRS2ID = '1356188'
 SysRS3ID = '1430240'
+TSCID = '1405682'
 SwRS1ID = '1392803'
 SwRS2ID = '1394006'
 SwRS3ID = '1469578'
@@ -28,8 +29,14 @@ SysITSID = '1454310'
 now = datetime.datetime.now()
 today = now.strftime('%Y-%m-%d %H:%M')
 nowtime = now.strftime('%m%d_%H%M')
-outputFileName_GetTestResult = 'getTestResult_Test'+nowtime+'.xls'
-outputFileName_GetTestResult_SysSwTS = 'getTestResult_Test_SysSwSysITS'+nowtime+'.xls'
+outputFileName_GetTestResult = 'getTestResult_DocID_'+nowtime+'.xls'
+outputFileName_GetTestResult_SysRS1 = 'getTestResult_SysRS1_'+nowtime+'.xls'
+outputFileName_GetTestResult_SysRS2 = 'getTestResult_SysRS2_'+nowtime+'.xls'
+outputFileName_GetTestResult_SysRS3 = 'getTestResult_SysRS3_'+nowtime+'.xls'
+outputFileName_GetTestResult_SysRS4 = 'getTestResult_SwRS1_'+nowtime+'.xls'
+outputFileName_GetTestResult_SysRS5 = 'getTestResult_SwRS2_'+nowtime+'.xls'
+outputFileName_GetTestResult_SysRS6 = 'getTestResult_SwRS3_'+nowtime+'.xls'
+outputFileName_GetTestResult_SysSwTS = 'getTestResult_SysTC_'+nowtime+'.xls'
 
 def main():
 
@@ -56,18 +63,40 @@ def main():
     TestResult_csv = "TestResult_Info_v104.7.csv"
 
     #QueryDefinition_GetTestResult = '((field["Document ID"]='+DocID+')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_GetTestResult_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_GetTestResult_SysRS2 = '((field["Document ID"]=' + SysRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_GetTestResult_SysRS3 = '((field["Document ID"]=' + SysRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_GetTestResult_SysRS4 = '((field["Document ID"]=' + SwRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_GetTestResult_SysRS5 = '((field["Document ID"]=' + SwRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_GetTestResult_SysRS6 = '((field["Document ID"]=' + SwRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
     #QueryDefinition_GetTestResult_SysSwTS = '((field["Document ID"]='+SysITSID+')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
 
     # 추출할 item filed 정의
     #itemExportFields = '"Document ID",ID,"A15 LuK ID",Text,"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"'
+    itemExportFields_SysRS = '"Document ID",ID,"ENG ID","Validated By","Satisfied By"'
     #itemExportFields_SysSwTS = '"Document ID",ID,"ENG ID","Test Method"'
 
     # exporting Non traced items of specific document
     #export_doc_cmd = 'im exportissues --outputFile=' + outputFileName_GetTestResult + ' --fields=' + itemExportFields + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult
+    export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysRS1
+    export_doc_cmd_SysRS2 = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysRS2
+    export_doc_cmd_SysRS3 = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysRS3
+    export_doc_cmd_SysRS4 = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysRS4 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysRS4
+    export_doc_cmd_SysRS5 = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysRS5 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysRS5
+    export_doc_cmd_SysRS6 = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysRS6 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysRS6
+
     #export_doc_cmd_SysSwTS = 'im exportissues --outputFile=' + outputFileName_GetTestResult_SysSwTS + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_GetTestResult_SysSwTS
     #subprocess.Popen(export_doc_cmd)
+    subprocess.call(export_doc_cmd_SysRS1)
+    subprocess.call(export_doc_cmd_SysRS2)
+    subprocess.call(export_doc_cmd_SysRS3)
+    #subprocess.call(export_doc_cmd_SysRS4)
+    #subprocess.call(export_doc_cmd_SysRS5)
+    #subprocess.call(export_doc_cmd_SysRS6)
+
     #subprocess.Popen(export_doc_cmd_SysSwTS)
 
+    """
     try:
         with open(test_session_txt, 'rt') as in_file:
             for line in in_file:
@@ -106,6 +135,7 @@ def main():
                 print("problem is occured. id", id)
 
     f.close()
+    """
 
 main()
 
