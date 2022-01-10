@@ -27,7 +27,7 @@ cr_delivery_milestone = 0
 verification_status = 'not finished'
 TC_Review_Status = 0
 
-DocID = '1226890'
+DocID = '1226890'                                                       ############## 고정이나 나중에 변경될 수 있음
 SysRS1ID = '1351133'
 SysRS2ID = '1356188'
 SysRS3ID = '1430240'
@@ -36,11 +36,14 @@ SwRS2ID = '1394006'
 SwRS3ID = '1469578'
 SysTCID = '1454824'
 SwTCID = '1464826'
-SysITSID = '1454310'
+SysITSID = '1454310'                                                    ##############
 
+################################★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★################################
 read_xlsx = "read_v104.7.xls"                                           ############### 변경
 test_session_txt = "testsession_v104.7.txt"                             ############### 변경
 TestResult_csv = "TestResult_Info_v104.7.csv"                           ############### 변경
+write_xlsx = "TraceMatrix_v104.7.xlsx"                                  ############### 변경
+################################★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★################################
 
 def SysID_combined(input1, input2, input3):
     #엑셀 파일 이름
@@ -130,6 +133,7 @@ def main():
     global read_xlsx
     global test_session_txt
     global TestResult_csv
+    global write_xlsx
 
 
     implementation_criteria = 12
@@ -466,10 +470,10 @@ def main():
         ws.cell(row_temp, 14).value = All_TC_Pass
 
 
-
     #### 데이터 입력 종료 ####
-    wb_write.save("TraceMatrix_v104.7.xlsx")
+    wb_write.save(write_xlsx)
     wb_write.close()
+
 
 main()
 
