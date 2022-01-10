@@ -13,7 +13,6 @@ import csv
 
 start = time.time()
 
-
 DocID = '1226890'     # 1226890
 SysRS1ID = '1351133'
 SysRS2ID = '1356188'

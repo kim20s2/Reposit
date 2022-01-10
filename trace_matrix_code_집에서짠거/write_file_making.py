@@ -27,6 +27,7 @@ cr_delivery_milestone = 0
 verification_status = 'not finished'
 TC_Review_Status = 0
 
+
 def main():
 
     global row_cr
