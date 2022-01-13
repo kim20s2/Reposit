@@ -1,6 +1,7 @@
 import pandas as pd
 import openpyxl
 from openpyxl.styles.fonts import Font
+import win32com.client
 from openpyxl import Workbook
 import subprocess
 import math
@@ -11,8 +12,9 @@ import chardet
 from enum import Enum
 import datetime
 import csv
+import xlwt
 
-start = time.time()
+start1 = time.time()
 
 user_id_pw = 0
 implementation_criteria = 0
@@ -36,14 +38,16 @@ SwRS2ID = '1394006'
 SwRS3ID = '1469578'
 SysTCID = '1454824'
 SwTCID = '1464826'
-SysITSID = '1454310'                                                    ##############
+SysITSID = '1454310'
 
 ################################★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★################################
-read_xlsx = "read_v104.7.xls"                                           ############### 변경
-test_session_txt = "testsession_v104.7.txt"                             ############### 변경
-TestResult_csv = "TestResult_Info_v104.7.csv"                           ############### 변경
-write_xlsx = "TraceMatrix_v104.7.xlsx"                                  ############### 변경
+version = "203.4"                                                       ############### 여기만 변경
+read_xlsx = "read_v" + version + ".xls"                                 ############### 파일명 format
+test_session_txt = "testsession_v" + version + ".txt"
+TestResult_csv = "TestResult_Info_v" + version + ".csv"
+write_xlsx = "TraceMatrix_v" + version + ".xlsx"
 ################################★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★################################
+
 
 def SysID_combined(input1, input2, input3):
     #엑셀 파일 이름
@@ -52,9 +56,12 @@ def SysID_combined(input1, input2, input3):
     frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
     frames[1:] = [df[1:] for df in frames[1:]]
     combined = pd.concat(frames)
+    if 'ID' not in combined.iloc[0]:
+        header = pd.DataFrame([["Document ID",'ID',"A15 LuK ID",'Text',"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"]])
+        combined = pd.concat([header, combined], ignore_index=True)
 
     #파일저장
-    combined.to_excel("SysID_Info.xls", header=False, index=False)
+    combined.to_excel("SysID_Info.xlsx", header=False, index=False)
 
 def SwID_combined(input1, input2, input3):
     #엑셀 파일 이름
@@ -63,9 +70,12 @@ def SwID_combined(input1, input2, input3):
     frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
     frames[1:] = [df[1:] for df in frames[1:]]
     combined = pd.concat(frames)
+    if 'ID' not in combined.iloc[0]:
+        header = pd.DataFrame([["Document ID",'ID',"ENG ID","Validated By","Satisfied By"]])
+        combined = pd.concat([header, combined], ignore_index=True)
 
     #파일저장
-    combined.to_excel("SwID_Info.xls", header=False, index=False)
+    combined.to_excel("SwID_Info.xlsx", header=False, index=False)
 
 def SysSwTSID_combined(input1, input2, input3):
     #엑셀 파일 이름
@@ -74,9 +84,13 @@ def SysSwTSID_combined(input1, input2, input3):
     frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
     frames[1:] = [df[1:] for df in frames[1:]]
     combined = pd.concat(frames)
+    if 'ID' not in combined.iloc[0]:
+        header = pd.DataFrame([["Document ID",'ID',"ENG ID","Test Method"]])
+        combined = pd.concat([header, combined], ignore_index=True)
 
     #파일저장
-    combined.to_excel("SysSwTSID_Info.xls", header=False, index=False)
+    combined.to_excel("SysSwTSID_Info.xlsx", header=False, index=False)
+
 
 def TestResult_Info():
     global test_session_txt
@@ -120,6 +134,7 @@ def TestResult_Info():
     f.close()
 
 def main():
+
     global row_cr
     global row_tc
     global user_id_pw
@@ -146,76 +161,9 @@ def main():
 
     user_name_txt = "user.txt"
     DocID_Info_xls = "DocID_Info.xls"
-    SysID_Info_xls = "SysID_Info.xls"
-    SwID_Info_xls = "SwID_Info.xls"
-    SysSwTS_Info_xls = "SysSwTSID_Info.xls"                         ### 고정
-
-    Result_DocID = 'DocID_Info.xls'
-    Result_SysRS1 = 'SysRS1_Info.xls'
-    Result_SysRS2 = 'SysRS2_Info.xls'
-    Result_SysRS3 = 'SysRS3_Info.xls'
-    Result_SysRS4 = 'SwRS1_Info.xls'
-    Result_SysRS5 = 'SwRS2_Info.xls'
-    Result_SysRS6 = 'SwRS3_Info.xls'
-    Result_SysSwTS1 = 'SysTC1_Info.xls'
-    Result_SysSwTS2 = 'SysTC2_Info.xls'
-    Result_SysSwTS3 = 'SysTC3_Info.xls'
-
-    QueryDefinition_DocID = '((field["Document ID"]=' + DocID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS2 = '((field["Document ID"]=' + SysRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS3 = '((field["Document ID"]=' + SysRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS4 = '((field["Document ID"]=' + SwRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS5 = '((field["Document ID"]=' + SwRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS6 = '((field["Document ID"]=' + SwRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-
-    itemExportFields_DocID = '"Document ID",ID,"A15 LuK ID",Text,"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"'
-    itemExportFields_SysRS = '"Document ID",ID,"ENG ID","Validated By","Satisfied By"'
-    itemExportFields_SysSwTS = '"Document ID",ID,"ENG ID","Test Method"'
-
-    export_doc_cmd_DocID = 'im exportissues --outputFile=' + Result_DocID + ' --fields=' + itemExportFields_DocID + ' --sortField=Type --queryDefinition=' + QueryDefinition_DocID
-    export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1
-    export_doc_cmd_SysRS2 = 'im exportissues --outputFile=' + Result_SysRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS2
-    export_doc_cmd_SysRS3 = 'im exportissues --outputFile=' + Result_SysRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS3
-    export_doc_cmd_SysRS4 = 'im exportissues --outputFile=' + Result_SysRS4 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS4
-    export_doc_cmd_SysRS5 = 'im exportissues --outputFile=' + Result_SysRS5 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS5
-    export_doc_cmd_SysRS6 = 'im exportissues --outputFile=' + Result_SysRS6 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS6
-    export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1
-    export_doc_cmd_SysSwTS2 = 'im exportissues --outputFile=' + Result_SysSwTS2 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS2
-    export_doc_cmd_SysSwTS3 = 'im exportissues --outputFile=' + Result_SysSwTS3 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS3
-
-    subprocess.call(export_doc_cmd_DocID)   ########################## DocID 파일 생성 ##########################
-    subprocess.call(export_doc_cmd_SysRS1)
-    subprocess.call(export_doc_cmd_SysRS2)
-    subprocess.call(export_doc_cmd_SysRS3)
-    subprocess.call(export_doc_cmd_SysRS4)
-    subprocess.call(export_doc_cmd_SysRS5)
-    subprocess.call(export_doc_cmd_SysRS6)
-    subprocess.call(export_doc_cmd_SysSwTS1)
-    subprocess.call(export_doc_cmd_SysSwTS2)
-    subprocess.call(export_doc_cmd_SysSwTS3)
-
-    ########################## SysID, SwID, SysSwTSID, TestResult_Info 파일 생성 및 통합 ##########################
-
-    SysID_combined(Result_SysRS1, Result_SysRS2, Result_SysRS3)
-    SwID_combined(Result_SysRS4, Result_SysRS5, Result_SysRS6)
-    SysSwTSID_combined(Result_SysSwTS1, Result_SysSwTS2, Result_SysSwTS3)
-    TestResult_Info()
-
-    ########################## testsession.txt 파일 읽기 ##########################
-    try:
-        with open(test_session_txt, 'rt') as in_file:
-            for line in in_file:
-                test_session_id = line  # test_session_txt 파일에 1줄마다 읽어드림
-                test_session_id = test_session_id.split(',')  # ,로 문자열 리스트화에서 구별
-            len_test_session_id = len(test_session_id)
-    except:
-        print("Please make a testsession.txt file with test session id. e.g. 1495334, 1495339, 1495343, 1495344")  # test_seesion_txt 파일에 아무것도 데이터가 없을때 또는 ,로 구분안갈때
-        subprocess.check_output("pause", shell=True)
-        return
+    SysID_Info_xls = "SysID_Info.xlsx"
+    SwID_Info_xls = "SwID_Info.xlsx"
+    SysSwTS_Info_xls = "SysSwTSID_Info.xlsx"                         ### 고정
 
     ########################## user.txt 파일 읽기 ##########################
     try:
@@ -230,6 +178,125 @@ def main():
         subprocess.check_output("pause", shell=True)
         return
 
+    Result_DocID = 'DocID_Info.xls'
+    Result_SysRS1 = 'SysRS1_Info.xls'
+    Result_SysRS2 = 'SysRS2_Info.xls'
+    Result_SysRS3 = 'SysRS3_Info.xls'
+    Result_SysRS4 = 'SwRS1_Info.xls'
+    Result_SysRS5 = 'SwRS2_Info.xls'
+    Result_SysRS6 = 'SwRS3_Info.xls'
+    Result_SysSwTS1 = 'SysTC1_Info.xls'
+    Result_SysSwTS2 = 'SysTC2_Info.xls'
+    Result_SysSwTS3 = 'SysTC3_Info.xls'
+
+    if os.path.exists(Result_DocID):
+        os.remove(Result_DocID)
+    if os.path.exists(Result_SysRS1):
+        os.remove(Result_SysRS1)
+    if os.path.exists(Result_SysRS2):
+        os.remove(Result_SysRS2)
+    if os.path.exists(Result_SysRS3):
+        os.remove(Result_SysRS3)
+    if os.path.exists(Result_SysRS4):
+        os.remove(Result_SysRS4)
+    if os.path.exists(Result_SysRS5):
+        os.remove(Result_SysRS5)
+    if os.path.exists(Result_SysRS6):
+        os.remove(Result_SysRS6)
+    if os.path.exists(Result_SysSwTS1):
+        os.remove(Result_SysSwTS1)
+    if os.path.exists(Result_SysSwTS2):
+        os.remove(Result_SysSwTS2)
+    if os.path.exists(Result_SysSwTS3):
+        os.remove(Result_SysSwTS3)
+
+    QueryDefinition_DocID = '((field["Document ID"]=' + DocID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SysRS2 = '((field["Document ID"]=' + SysRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SysRS3 = '((field["Document ID"]=' + SysRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SysRS4 = '((field["Document ID"]=' + SwRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SysRS5 = '((field["Document ID"]=' + SwRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SysRS6 = '((field["Document ID"]=' + SwRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
+    QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'      #v2xx.x는 HMC대신 Ferrari
+    QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
+
+    itemExportFields_DocID = '"Document ID",ID,"A15 LuK ID",Text,"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"'
+    itemExportFields_SysRS = '"Document ID",ID,"ENG ID","Validated By","Satisfied By"'
+    itemExportFields_SysSwTS = '"Document ID",ID,"ENG ID","Test Method"'
+
+    export_doc_cmd_DocID = 'im exportissues --outputFile=' + Result_DocID + ' --fields=' + itemExportFields_DocID + ' --sortField=Type --queryDefinition=' + QueryDefinition_DocID + ' --noopenOutputFile'
+    export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
+    export_doc_cmd_SysRS2 = 'im exportissues --outputFile=' + Result_SysRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS2 + ' --noopenOutputFile'
+    export_doc_cmd_SysRS3 = 'im exportissues --outputFile=' + Result_SysRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS3 + ' --noopenOutputFile'
+    export_doc_cmd_SysRS4 = 'im exportissues --outputFile=' + Result_SysRS4 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS4 + ' --noopenOutputFile'
+    export_doc_cmd_SysRS5 = 'im exportissues --outputFile=' + Result_SysRS5 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS5 + ' --noopenOutputFile'
+    export_doc_cmd_SysRS6 = 'im exportissues --outputFile=' + Result_SysRS6 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS6 + ' --noopenOutputFile'
+    export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1 + ' --noopenOutputFile'
+    export_doc_cmd_SysSwTS2 = 'im exportissues --outputFile=' + Result_SysSwTS2 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS2 + ' --noopenOutputFile'
+    export_doc_cmd_SysSwTS3 = 'im exportissues --outputFile=' + Result_SysSwTS3 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS3 + ' --noopenOutputFile'
+
+    start1 = time.time()
+
+    subprocess.call(export_doc_cmd_DocID)   ########################## DocID 파일 생성 ##########################
+    subprocess.call(export_doc_cmd_SysRS1)
+    subprocess.call(export_doc_cmd_SysRS2)
+    subprocess.call(export_doc_cmd_SysRS3)
+    subprocess.call(export_doc_cmd_SysRS4)
+    subprocess.call(export_doc_cmd_SysRS5)
+    subprocess.call(export_doc_cmd_SysRS6)
+    subprocess.call(export_doc_cmd_SysSwTS1)
+    subprocess.call(export_doc_cmd_SysSwTS2)
+    subprocess.call(export_doc_cmd_SysSwTS3)
+
+    end1 = time.time()
+    print(f"기본 파일 만드는데 까지 걸리는 시간 : {end1 - start1:.5f} sec")
+
+
+    ########################## SysID, SwID, SysSwTSID, TestResult_Info 파일 생성 및 통합 ##########################
+    start2 = time.time()
+    SysID_combined(Result_SysRS1, Result_SysRS2, Result_SysRS3)
+    SwID_combined(Result_SysRS4, Result_SysRS5, Result_SysRS6)
+    SysSwTSID_combined(Result_SysSwTS1, Result_SysSwTS2, Result_SysSwTS3)
+    TestResult_Info()
+
+
+    end2 = time.time()
+    print(f"파일 통합하고 TestResult_Info 만드는데 까지 걸리는 시간 : {end2 - start2:.5f} sec")
+
+    if os.path.exists(Result_SysRS1):
+        os.remove(Result_SysRS1)
+    if os.path.exists(Result_SysRS2):
+        os.remove(Result_SysRS2)
+    if os.path.exists(Result_SysRS3):
+        os.remove(Result_SysRS3)
+    if os.path.exists(Result_SysRS4):
+        os.remove(Result_SysRS4)
+    if os.path.exists(Result_SysRS5):
+        os.remove(Result_SysRS5)
+    if os.path.exists(Result_SysRS6):
+        os.remove(Result_SysRS6)
+    if os.path.exists(Result_SysSwTS1):
+        os.remove(Result_SysSwTS1)
+    if os.path.exists(Result_SysSwTS2):
+        os.remove(Result_SysSwTS2)
+    if os.path.exists(Result_SysSwTS3):
+        os.remove(Result_SysSwTS3)
+
+    start0 = time.time()
+    ########################## testsession.txt 파일 읽기 ##########################
+    try:
+        with open(test_session_txt, 'rt') as in_file:
+            for line in in_file:
+                test_session_id = line  # test_session_txt 파일에 1줄마다 읽어드림
+                test_session_id = test_session_id.split(',')  # ,로 문자열 리스트화에서 구별
+            len_test_session_id = len(test_session_id)
+    except:
+        print("Please make a testsession.txt file with test session id. e.g. 1495334, 1495339, 1495343, 1495344")  # test_seesion_txt 파일에 아무것도 데이터가 없을때 또는 ,로 구분안갈때
+        subprocess.check_output("pause", shell=True)
+        return
+
+
     row_cr = row_tc = 2   # 2행부터 시작
     ########################## read.xlsx 파일 읽기 ##########################
 
@@ -242,13 +309,13 @@ def main():
     data2 = pd.read_excel(DocID_Info_xls, sheet_name=worksheet_name)
     df_DocID = pd.DataFrame(data2)
 
-    data3 = pd.read_excel(SysID_Info_xls, sheet_name=worksheet_name)
+    data3 = pd.read_excel(SysID_Info_xls, sheet_name="Sheet1")
     df_SysID = pd.DataFrame(data3)
 
-    data4 = pd.read_excel(SwID_Info_xls, sheet_name=worksheet_name)
+    data4 = pd.read_excel(SwID_Info_xls, sheet_name="Sheet1")
     df_SwID = pd.DataFrame(data4)
 
-    data5 = pd.read_excel(SysSwTS_Info_xls, sheet_name=worksheet_name)
+    data5 = pd.read_excel(SysSwTS_Info_xls, sheet_name="Sheet1")
     df_SysSwTS = pd.DataFrame(data5)
 
     data6 = pd.read_csv(TestResult_csv)
@@ -297,6 +364,8 @@ def main():
             data_row[4] = 'all milestones'
         else:
             if data_row[4] != 'n/a':
+                #if "M4_1" in data_row[4]:
+                #    print("test")
                 m = p.search(data_row[4])
                 cr_delivery_milestone = m.group(1)
             else:
@@ -469,13 +538,15 @@ def main():
 
         ws.cell(row_temp, 14).value = All_TC_Pass
 
-
     #### 데이터 입력 종료 ####
     wb_write.save(write_xlsx)
     wb_write.close()
+    end0 = time.time()
 
 
+##################################################################
 main()
 
-end = time.time()
-print(f"Write파일이 만드는데 까지 걸리는 시간 : {end - start:.5f} sec")
+end1 = time.time()
+print(f"Write파일이 만드는데 걸리는 시간 : {end0 - start0:.5f} sec")
+print(f"Write파일이 만드는데 까지 걸리는 총 시간 : {end1 - start1:.5f} sec")
