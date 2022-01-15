@@ -182,9 +182,9 @@ def main():
     Result_SysRS1 = 'SysRS1_Info.xls'
     Result_SysRS2 = 'SysRS2_Info.xls'
     Result_SysRS3 = 'SysRS3_Info.xls'
-    Result_SysRS4 = 'SwRS1_Info.xls'
-    Result_SysRS5 = 'SwRS2_Info.xls'
-    Result_SysRS6 = 'SwRS3_Info.xls'
+    Result_SwRS1 = 'SwRS1_Info.xls'
+    Result_SwRS2 = 'SwRS2_Info.xls'
+    Result_SwRS3 = 'SwRS3_Info.xls'
     Result_SysSwTS1 = 'SysTC1_Info.xls'
     Result_SysSwTS2 = 'SysTC2_Info.xls'
     Result_SysSwTS3 = 'SysTC3_Info.xls'
@@ -197,12 +197,12 @@ def main():
         os.remove(Result_SysRS2)
     if os.path.exists(Result_SysRS3):
         os.remove(Result_SysRS3)
-    if os.path.exists(Result_SysRS4):
-        os.remove(Result_SysRS4)
-    if os.path.exists(Result_SysRS5):
-        os.remove(Result_SysRS5)
-    if os.path.exists(Result_SysRS6):
-        os.remove(Result_SysRS6)
+    if os.path.exists(Result_SwRS1):
+        os.remove(Result_SwRS1)
+    if os.path.exists(Result_SwRS2):
+        os.remove(Result_SwRS2)
+    if os.path.exists(Result_SwRS3):
+        os.remove(Result_SwRS3)
     if os.path.exists(Result_SysSwTS1):
         os.remove(Result_SysSwTS1)
     if os.path.exists(Result_SysSwTS2):
@@ -214,9 +214,9 @@ def main():
     QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
     QueryDefinition_SysRS2 = '((field["Document ID"]=' + SysRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
     QueryDefinition_SysRS3 = '((field["Document ID"]=' + SysRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS4 = '((field["Document ID"]=' + SwRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS5 = '((field["Document ID"]=' + SwRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-    QueryDefinition_SysRS6 = '((field["Document ID"]=' + SwRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SwRS1 = '((field["Document ID"]=' + SwRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SwRS2 = '((field["Document ID"]=' + SwRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+    QueryDefinition_SwRS3 = '((field["Document ID"]=' + SwRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
     QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
     QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'      #v2xx.x는 HMC대신 Ferrari
     QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
@@ -229,22 +229,22 @@ def main():
     export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
     export_doc_cmd_SysRS2 = 'im exportissues --outputFile=' + Result_SysRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS2 + ' --noopenOutputFile'
     export_doc_cmd_SysRS3 = 'im exportissues --outputFile=' + Result_SysRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS3 + ' --noopenOutputFile'
-    export_doc_cmd_SysRS4 = 'im exportissues --outputFile=' + Result_SysRS4 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS4 + ' --noopenOutputFile'
-    export_doc_cmd_SysRS5 = 'im exportissues --outputFile=' + Result_SysRS5 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS5 + ' --noopenOutputFile'
-    export_doc_cmd_SysRS6 = 'im exportissues --outputFile=' + Result_SysRS6 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS6 + ' --noopenOutputFile'
+    export_doc_cmd_SwRS1 = 'im exportissues --outputFile=' + Result_SwRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS1 + ' --noopenOutputFile'
+    export_doc_cmd_SwRS2 = 'im exportissues --outputFile=' + Result_SwRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS2 + ' --noopenOutputFile'
+    export_doc_cmd_SwRS3 = 'im exportissues --outputFile=' + Result_SwRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS3 + ' --noopenOutputFile'
     export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1 + ' --noopenOutputFile'
     export_doc_cmd_SysSwTS2 = 'im exportissues --outputFile=' + Result_SysSwTS2 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS2 + ' --noopenOutputFile'
     export_doc_cmd_SysSwTS3 = 'im exportissues --outputFile=' + Result_SysSwTS3 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS3 + ' --noopenOutputFile'
 
     start1 = time.time()
 
-    subprocess.call(export_doc_cmd_DocID)   ########################## DocID 파일 생성 ##########################
+    subprocess.call(export_doc_cmd_DocID)
     subprocess.call(export_doc_cmd_SysRS1)
     subprocess.call(export_doc_cmd_SysRS2)
     subprocess.call(export_doc_cmd_SysRS3)
-    subprocess.call(export_doc_cmd_SysRS4)
-    subprocess.call(export_doc_cmd_SysRS5)
-    subprocess.call(export_doc_cmd_SysRS6)
+    subprocess.call(export_doc_cmd_SwRS1)
+    subprocess.call(export_doc_cmd_SwRS2)
+    subprocess.call(export_doc_cmd_SwRS3)
     subprocess.call(export_doc_cmd_SysSwTS1)
     subprocess.call(export_doc_cmd_SysSwTS2)
     subprocess.call(export_doc_cmd_SysSwTS3)
