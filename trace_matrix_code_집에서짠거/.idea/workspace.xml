@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6e9a61e-cc6e-4e92-8dac-df2401c46032" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../trace_matrix_code_github/DocID_Info.xls" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../trace_matrix_code_github/GUI_Project.py" beforeDir="false" afterPath="$PROJECT_DIR$/../trace_matrix_code_github/GUI_Project.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -141,7 +140,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/../trace_matrix_code_github/GUI_Project.py</url>
-          <line>167</line>
+          <line>197</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>

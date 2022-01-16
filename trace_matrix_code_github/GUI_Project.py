@@ -1,21 +1,20 @@
+import numpy.random.common
+import numpy.random.bounded_integers
+import numpy.random.entropy
+import pandas as pd
 import sys
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QIcon
-import pandas as pd
 import openpyxl
-from openpyxl.styles.fonts import Font
 import win32com.client
 from openpyxl import Workbook
 import subprocess
-import math
-import time
 import os
 import re
 import chardet
 from enum import Enum
-import datetime
 import csv
 import xlwt
 
@@ -45,11 +44,7 @@ class App(QMainWindow):
 
 
     def initUI(self):
-        user_id_pw0 = "kim30s2"
-        user_id_pw1 = "kim30s2"
 
-        connect_command = 'si connect --user=' + user_id_pw0 + ' --password=' + user_id_pw1
-        subprocess.call(connect_command, shell=True)
         self.setWindowTitle('Trace Matrix Making Tool')
         self.setWindowIcon(QIcon('web.png'))
         self.resize(500, 350)
@@ -68,49 +63,49 @@ class App(QMainWindow):
 
         text_label = QLabel(self)
         text_label.move(10, 20)
-        text_label.setText('DocID 입력')
+        text_label.setText('DocID')
         self.line_DocID = QLineEdit(self)
         self.line_DocID.move(10, 45)
 
         text_label = QLabel(self)
         text_label.move(10, 70)
-        text_label.setText('SysRS #1 입력')
+        text_label.setText('SysRS #1')
         self.line_SysRS1 = QLineEdit(self)
         self.line_SysRS1.move(10, 95)
 
         text_label = QLabel(self)
         text_label.move(110, 70)
-        text_label.setText('SysRS #2 입력')
+        text_label.setText('SysRS #2')
         self.line_SysRS2 = QLineEdit(self)
         self.line_SysRS2.move(110, 95)
 
         text_label = QLabel(self)
         text_label.move(210, 70)
-        text_label.setText('SysRS #3 입력')
+        text_label.setText('SysRS #3')
         self.line_SysRS3 = QLineEdit(self)
         self.line_SysRS3.move(210, 95)
 
         text_label = QLabel(self)
         text_label.move(10, 120)
-        text_label.setText('SwRS #1 입력')
+        text_label.setText('SwRS #1')
         self.line_SwRS1 = QLineEdit(self)
         self.line_SwRS1.move(10, 145)
 
         text_label = QLabel(self)
         text_label.move(110, 120)
-        text_label.setText('SwRS #2 입력')
+        text_label.setText('SwRS #2')
         self.line_SwRS2 = QLineEdit(self)
         self.line_SwRS2.move(110, 145)
 
         text_label = QLabel(self)
         text_label.move(210, 120)
-        text_label.setText('SwRS #3 입력')
+        text_label.setText('SwRS #3')
         self.line_SwRS3 = QLineEdit(self)
         self.line_SwRS3.move(210, 145)
 
         text_label = QLabel(self)
         text_label.move(10, 170)
-        text_label.setText('SysTC 입력')
+        text_label.setText('SysTC')
         self.line_SysTC = QLineEdit(self)
         self.line_SysTC.move(10, 195)
 
@@ -125,6 +120,18 @@ class App(QMainWindow):
         text_label.setText('SysITS 입력')
         self.line_SysITS = QLineEdit(self)
         self.line_SysITS.move(210, 195)
+
+        text_label = QLabel(self)
+        text_label.move(10, 240)
+        text_label.setText('User ID 입력')
+        self.line_UserID = QLineEdit(self)
+        self.line_UserID.move(10, 265)
+
+        text_label = QLabel(self)
+        text_label.move(110, 240)
+        text_label.setText('Password 입력')
+        self.line_PW = QLineEdit(self)
+        self.line_PW.move(110, 265)
 
         btn1 = QPushButton('Base File 생성', self)
         btn1.clicked.connect(self.btn1_clicked)
@@ -146,7 +153,10 @@ class App(QMainWindow):
         btn4.move(350, 200)
         btn4.resize(btn4.sizeHint())
 
-
+        btn5 = QPushButton('Integrity Server 로그인', self)
+        btn5.clicked.connect(self.btn5_clicked)
+        btn5.move(350, 250)
+        btn5.resize(btn5.sizeHint())
 
         #### actions ####
     def btn1_clicked(self):
@@ -669,7 +679,23 @@ class App(QMainWindow):
         wb_write.close()
         QMessageBox.about(self, "Trace Matrix 알림", "Trace Matrix 생성완료")
 
+    def btn5_clicked(self):
+        if self.line_UserID.text() != "":
+            user_id_pw0 = str(self.line_UserID.text())
+            temp1 = 1
+        else:
+            QMessageBox.about(self, "Warning", "User ID가 입력되지 않았습니다.")
+            temp1 = 0
+        if self.line_PW.text() != "":
+            user_id_pw1 = str(self.line_PW.text())
+            temp2 = 1
+        else:
+            QMessageBox.about(self, "Warning", "Password가 입력되지 않았습니다.")
+            temp2 = 0
 
+        if temp1 * temp2 == 1:
+            connect_command = 'si connect --user=' + user_id_pw0 + ' --password=' + user_id_pw1
+            subprocess.call(connect_command, shell=True)
 
 
 if __name__ == '__main__':
