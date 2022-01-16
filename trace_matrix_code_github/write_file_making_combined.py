@@ -41,7 +41,7 @@ SwTCID = '1464826'
 SysITSID = '1454310'
 
 ################################★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★################################
-version = "203.4"                                                       ############### 여기만 변경
+version = "104.7"                                                       ############### 여기만 변경
 read_xlsx = "read_v" + version + ".xls"                                 ############### 파일명 format
 test_session_txt = "testsession_v" + version + ".txt"
 TestResult_csv = "TestResult_Info_v" + version + ".csv"
@@ -56,7 +56,8 @@ def SysID_combined(input1, input2, input3):
     frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
     frames[1:] = [df[1:] for df in frames[1:]]
     combined = pd.concat(frames)
-    if 'ID' not in combined.iloc[0]:
+    temp_list = (combined.iloc[0]).values.tolist()
+    if 'ID' not in temp_list:
         header = pd.DataFrame([["Document ID",'ID',"A15 LuK ID",'Text',"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"]])
         combined = pd.concat([header, combined], ignore_index=True)
 
@@ -70,7 +71,8 @@ def SwID_combined(input1, input2, input3):
     frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
     frames[1:] = [df[1:] for df in frames[1:]]
     combined = pd.concat(frames)
-    if 'ID' not in combined.iloc[0]:
+    temp_list = (combined.iloc[0]).values.tolist()
+    if 'ID' not in temp_list:
         header = pd.DataFrame([["Document ID",'ID',"ENG ID","Validated By","Satisfied By"]])
         combined = pd.concat([header, combined], ignore_index=True)
 
@@ -84,7 +86,8 @@ def SysSwTSID_combined(input1, input2, input3):
     frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
     frames[1:] = [df[1:] for df in frames[1:]]
     combined = pd.concat(frames)
-    if 'ID' not in combined.iloc[0]:
+    temp_list = (combined.iloc[0]).values.tolist()
+    if 'ID' not in temp_list:
         header = pd.DataFrame([["Document ID",'ID',"ENG ID","Test Method"]])
         combined = pd.concat([header, combined], ignore_index=True)
 
@@ -256,7 +259,7 @@ def main():
     ########################## SysID, SwID, SysSwTSID, TestResult_Info 파일 생성 및 통합 ##########################
     start2 = time.time()
     SysID_combined(Result_SysRS1, Result_SysRS2, Result_SysRS3)
-    SwID_combined(Result_SysRS4, Result_SysRS5, Result_SysRS6)
+    SwID_combined(Result_SwRS1, Result_SwRS2, Result_SwRS3)
     SysSwTSID_combined(Result_SysSwTS1, Result_SysSwTS2, Result_SysSwTS3)
     TestResult_Info()
 
@@ -270,12 +273,12 @@ def main():
         os.remove(Result_SysRS2)
     if os.path.exists(Result_SysRS3):
         os.remove(Result_SysRS3)
-    if os.path.exists(Result_SysRS4):
-        os.remove(Result_SysRS4)
-    if os.path.exists(Result_SysRS5):
-        os.remove(Result_SysRS5)
-    if os.path.exists(Result_SysRS6):
-        os.remove(Result_SysRS6)
+    if os.path.exists(Result_SwRS1):
+        os.remove(Result_SwRS1)
+    if os.path.exists(Result_SwRS2):
+        os.remove(Result_SwRS2)
+    if os.path.exists(Result_SwRS3):
+        os.remove(Result_SwRS3)
     if os.path.exists(Result_SysSwTS1):
         os.remove(Result_SysSwTS1)
     if os.path.exists(Result_SysSwTS2):
@@ -542,11 +545,11 @@ def main():
     wb_write.save(write_xlsx)
     wb_write.close()
     end0 = time.time()
+    print(f"Write파일이 만드는데 걸리는 시간 : {end0 - start0:.5f} sec")
 
 
 ##################################################################
 main()
 
 end1 = time.time()
-print(f"Write파일이 만드는데 걸리는 시간 : {end0 - start0:.5f} sec")
 print(f"Write파일이 만드는데 까지 걸리는 총 시간 : {end1 - start1:.5f} sec")

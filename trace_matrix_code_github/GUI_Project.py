@@ -20,6 +20,21 @@ import csv
 import xlwt
 
 test_session_id = []
+len_test_session_id = 0
+TestResult_csv = "TestResult_Info.csv"
+
+implementation_criteria = 0
+minor_criteria = 0
+test_result = 0
+LukID_temp = 0
+DecomposesToID = 0
+SysID_length = 0
+SwID_length = 0
+cr_short_description = 0
+cr_delivery_milestone = 0
+verification_status = 'not finished'
+TC_Review_Status = 0
+write_xlsx = "TraceMatrix.xlsx"
 
 class App(QMainWindow):
 
@@ -28,8 +43,13 @@ class App(QMainWindow):
         self.date = QDate.currentDate()
         self.initUI()
 
-    def initUI(self):
 
+    def initUI(self):
+        user_id_pw0 = "kim30s2"
+        user_id_pw1 = "kim30s2"
+
+        connect_command = 'si connect --user=' + user_id_pw0 + ' --password=' + user_id_pw1
+        subprocess.call(connect_command, shell=True)
         self.setWindowTitle('Trace Matrix Making Tool')
         self.setWindowIcon(QIcon('web.png'))
         self.resize(500, 350)
@@ -127,9 +147,9 @@ class App(QMainWindow):
         btn4.resize(btn4.sizeHint())
 
 
+
         #### actions ####
     def btn1_clicked(self):
-        QMessageBox.about(self, "Base File 알림", "Base File 생성중")
         if self.line_DocID.text() != "":
             DocID = str(self.line_DocID.text())
         if self.line_SysRS1.text() != "":
@@ -171,10 +191,10 @@ class App(QMainWindow):
             frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
             frames[1:] = [df[1:] for df in frames[1:]]
             combined = pd.concat(frames)
-            if 'ID' not in combined.iloc[0]:
+            temp_list = (combined.iloc[0]).values.tolist()
+            if 'ID' not in temp_list:
                 header = pd.DataFrame([["Document ID",'ID',"A15 LuK ID",'Text',"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"]])
                 combined = pd.concat([header, combined], ignore_index=True)
-
             #파일저장
             combined.to_excel("SysID_Info.xlsx", header=False, index=False)
 
@@ -186,10 +206,10 @@ class App(QMainWindow):
             frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
             frames[1:] = [df[1:] for df in frames[1:]]
             combined = pd.concat(frames)
-            if 'ID' not in combined.iloc[0]:
+            temp_list = (combined.iloc[0]).values.tolist()
+            if 'ID' not in temp_list:
                 header = pd.DataFrame([["Document ID",'ID',"ENG ID","Validated By","Satisfied By"]])
                 combined = pd.concat([header, combined], ignore_index=True)
-
             #파일저장
             combined.to_excel("SwID_Info.xlsx", header=False, index=False)
 
@@ -201,10 +221,10 @@ class App(QMainWindow):
             frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
             frames[1:] = [df[1:] for df in frames[1:]]
             combined = pd.concat(frames)
-            if 'ID' not in combined.iloc[0]:
+            temp_list = (combined.iloc[0]).values.tolist()
+            if "ID" not in temp_list:
                 header = pd.DataFrame([["Document ID",'ID',"ENG ID","Test Method"]])
                 combined = pd.concat([header, combined], ignore_index=True)
-
             #파일저장
             combined.to_excel("SysSwTSID_Info.xlsx", header=False, index=False)
 
@@ -238,11 +258,13 @@ class App(QMainWindow):
         if self.line_DocID.text() != "":
             QueryDefinition_DocID = '((field["Document ID"]=' + DocID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
             export_doc_cmd_DocID = 'im exportissues --outputFile=' + Result_DocID + ' --fields=' + itemExportFields_DocID + ' --sortField=Type --queryDefinition=' + QueryDefinition_DocID + ' --noopenOutputFile'
-            #subprocess.call(export_doc_cmd_DocID)
+            subprocess.call(export_doc_cmd_DocID)
+        else:
+            Result_DocID = ""
         if self.line_SysRS1.text() != "":
             QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
             export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
-            #subprocess.call(export_doc_cmd_SysRS1)
+            subprocess.call(export_doc_cmd_SysRS1)
         else:
             Result_SysRS1 = ""
         if self.line_SysRS2.text() != "":
@@ -276,19 +298,19 @@ class App(QMainWindow):
         else:
             Result_SwRS3 = ""
         if self.line_SysTC.text() != "":
-            QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
+            QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
             export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1 + ' --noopenOutputFile'
             subprocess.call(export_doc_cmd_SysSwTS1)
         else:
             Result_SysSwTS1 = ""
         if self.line_SwTC.text() != "":
-            QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'      #v2xx.x는 HMC대신 Ferrari
+            QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'      #v2xx.x는 HMC대신 Ferrari
             export_doc_cmd_SysSwTS2 = 'im exportissues --outputFile=' + Result_SysSwTS2 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS2 + ' --noopenOutputFile'
             subprocess.call(export_doc_cmd_SysSwTS2)
         else:
             Result_SysSwTS2 = ""
         if self.line_SysITS.text() != "":
-            QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
+            QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
             export_doc_cmd_SysSwTS3 = 'im exportissues --outputFile=' + Result_SysSwTS3 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS3 + ' --noopenOutputFile'
             subprocess.call(export_doc_cmd_SysSwTS3)
         else:
@@ -298,11 +320,32 @@ class App(QMainWindow):
         SysID_combined(Result_SysRS1, Result_SysRS2, Result_SysRS3)
         SwID_combined(Result_SwRS1, Result_SwRS2, Result_SwRS3)
         SysSwTSID_combined(Result_SysSwTS1, Result_SysSwTS2, Result_SysSwTS3)
+
+        if os.path.exists(Result_SysRS1):
+            os.remove(Result_SysRS1)
+        if os.path.exists(Result_SysRS2):
+            os.remove(Result_SysRS2)
+        if os.path.exists(Result_SysRS3):
+            os.remove(Result_SysRS3)
+        if os.path.exists(Result_SwRS1):
+            os.remove(Result_SwRS1)
+        if os.path.exists(Result_SwRS2):
+            os.remove(Result_SwRS2)
+        if os.path.exists(Result_SwRS3):
+            os.remove(Result_SwRS3)
+        if os.path.exists(Result_SysSwTS1):
+            os.remove(Result_SysSwTS1)
+        if os.path.exists(Result_SysSwTS2):
+            os.remove(Result_SysSwTS2)
+        if os.path.exists(Result_SysSwTS3):
+            os.remove(Result_SysSwTS3)
+
         QMessageBox.about(self, "Base File 알림", "Base File 생성완료")
 
 
     def btn2_clicked(self):
         global test_session_id
+        global len_test_session_id
         fileOpen = QFileDialog.getOpenFileName(self, 'Open file', './')
         if fileOpen[0]:
             f = open(fileOpen[0], 'r')
@@ -322,57 +365,40 @@ class App(QMainWindow):
             QMessageBox.about(self, "TestSession 알림", "TestSession 읽기실패")
 
 
-
     def btn3_clicked(self):
-        QMessageBox.about(self, "TestResult 알림", "TestResult 생성중")
-        TestResult_csv = "TestResult_Info.csv"
-        def TestResult_Info():
-            global test_session_txt
-            global TestResult_csv
+        global test_session_id
+        global len_test_session_id
+        global TestResult_csv
 
-            try:
-                with open(test_session_txt, 'rt') as in_file:
-                    for line in in_file:
-                        test_session_id = line  # test_session_txt 파일에 1줄마다 읽어드림
-                        test_session_id = test_session_id.split(',')  # ,로 문자열 리스트화에서 구별
-                    len_test_session_id = len(test_session_id)
-            except:
-                print("Please make a testsession.txt file with test session id. e.g. 1495334, 1495339, 1495343, 1495344")  # test_seesion_txt 파일에 아무것도 데이터가 없을때 또는 ,로 구분안갈때
-                subprocess.check_output("pause", shell=True)
-                return
+        f = open(TestResult_csv, 'w', encoding='EUC-KR', newline='')
+        wr = csv.writer(f)
+        wr.writerow(["Session ID", "TC ID", "Test Result"])
 
-            f = open(TestResult_csv, 'w', encoding='EUC-KR', newline='')
-            wr = csv.writer(f)
-            wr.writerow(["Session ID", "TC ID", "Test Result"])
+        itemExportFields_TestResult = "sessionID,caseID,verdict"
 
-            itemExportFields_TestResult = "sessionID,caseID,verdict"
+        for j in range(0, len_test_session_id):
+            result_test_cmd = 'tm results' + ' --sessionID=' + test_session_id[j].strip() +' --fields=' + itemExportFields_TestResult
 
-            for j in range(0, len_test_session_id):
-                result_test_cmd = 'tm results' + ' --sessionID=' + test_session_id[j].strip() +' --fields=' + itemExportFields_TestResult
+            result = subprocess.check_output(result_test_cmd)
+            result = result.splitlines()
 
-                result = subprocess.check_output(result_test_cmd)
-                result = result.splitlines()
-
-                for line in result:  # Store each line in a string variable "line"
-                    # parse id decomposed to, satisfied by, validated by
-                    try:
-                        encode_type = chardet.detect(line)
-                        if encode_type['encoding'] is not None:
-                            line = line.decode(encode_type['encoding'])             # encode_type['encoding'] = EUC-KR
-                            line = line.split('\t', maxsplit=3)
-                            wr.writerow(line)
-                        else:
-                            line = line.decode('EUC-KR')
-                    except:
-                        print("problem is occured. id", id)
-            f.close()
-
-        TestResult_Info()
+            for line in result:  # Store each line in a string variable "line"
+                # parse id decomposed to, satisfied by, validated by
+                try:
+                    encode_type = chardet.detect(line)
+                    if encode_type['encoding'] is not None:
+                        line = line.decode(encode_type['encoding'])             # encode_type['encoding'] = EUC-KR
+                        line = line.split('\t', maxsplit=3)
+                        wr.writerow(line)
+                    else:
+                        line = line.decode('EUC-KR')
+                except:
+                    print("problem is occured. id", id)
+        f.close()
         QMessageBox.about(self, "TestResult 알림", "TestResult 생성 완료")
 
 
     def btn4_clicked(self):
-        QMessageBox.about(self, "Trace Matrix 알림", "Trace Matrix 생성중")
         global row_cr
         global row_tc
         global user_id_pw
@@ -383,8 +409,6 @@ class App(QMainWindow):
         global SysID_length
         global cr_delivery_milestone
         global TC_Review_Status
-        global read_xlsx
-        global test_session_txt
         global TestResult_csv
         global write_xlsx
 
@@ -393,7 +417,7 @@ class App(QMainWindow):
         row_temp = 2
         minor_criteria = 'Patch#2'
 
-        read_xlsx = "read.xls"
+        read_xlsx = "read_v104.7.xls"
         DocID_Info_xls = "DocID_Info.xls"
         SysID_Info_xls = "SysID_Info.xlsx"
         SwID_Info_xls = "SwID_Info.xlsx"
@@ -403,7 +427,7 @@ class App(QMainWindow):
         ########################## read.xlsx 파일 읽기 ##########################
 
         worksheet_number = 0                                # sheet number 지정
-        worksheet_name = "Sheet" + str(worksheet_number)    # read.xlsx의 worksheet 이름
+        worksheet_name = "Sheet" + str(worksheet_number)    # read.xls의 worksheet 이름
 
         data1 = pd.read_excel(read_xlsx, sheet_name=worksheet_name)                     # read 파일 읽기 1~6
         df_read = pd.DataFrame(data1)
