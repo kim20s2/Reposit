@@ -2,42 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6e9a61e-cc6e-4e92-8dac-df2401c46032" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/trace_matrix_code_집에서짠거.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DocID_Info.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI_Project.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SwID_Info.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SysID_Info.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SysSwTSID_Info.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestResult_Info_v104.7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestResult_Info_v203.4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TraceMatrix_v104.7.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TraceMatrix_v203.4.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/excel_export_code.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/excel_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/getTestResult.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/one_line_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/read_v104.7.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/read_v203.4.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testsession_v104.7.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testsession_v203.4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/traceability_matrix_customer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/write_file_making.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/write_file_making_통합버전.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/김정민님 파일/read_v104.7.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/김정민님 파일/read_v203.4.xls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/김정민님 파일/testsession_v104.7.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/김정민님 파일/testsession_v203.4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/성능개선.pptx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/코드 플로우.pptx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/합친엑셀.xls" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trace_matrix_code_github/DocID_Info.xls" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trace_matrix_code_github/GUI_Project.py" beforeDir="false" afterPath="$PROJECT_DIR$/../trace_matrix_code_github/GUI_Project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +36,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../trace_matrix_code_github/GUI_Project.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../trace_matrix_code_github/write_file_making.py" />
   </component>
   <component name="RunManager" selected="Python.GUI_Project">
     <configuration name="GUI_Project" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -115,18 +82,18 @@
       <method v="2" />
     </configuration>
     <configuration name="write_file_making" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="trace_matrix_code_집에서짠거" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="C:\Users\kim20\Anaconda3\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../trace_matrix_code_github" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/write_file_making.py" />
+      <module name="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../trace_matrix_code_github/write_file_making.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -168,9 +135,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../trace_matrix_code_github/write_file_making.py</url>
+          <line>62</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/../trace_matrix_code_github/GUI_Project.py</url>
-          <line>114</line>
-          <option name="timeStamp" value="1" />
+          <line>167</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

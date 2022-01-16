@@ -1,8 +1,25 @@
 import sys
+from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QIcon
+import pandas as pd
+import openpyxl
+from openpyxl.styles.fonts import Font
+import win32com.client
+from openpyxl import Workbook
+import subprocess
+import math
+import time
+import os
+import re
+import chardet
+from enum import Enum
+import datetime
+import csv
+import xlwt
 
+test_session_id = []
 
 class App(QMainWindow):
 
@@ -113,16 +130,26 @@ class App(QMainWindow):
         #### actions ####
     def btn1_clicked(self):
         QMessageBox.about(self, "Base File 알림", "Base File 생성중")
-        DocID = int(self.line_DocID.text())
-        SysRS1ID = int(self.line_SysRS1.text())
-        SysRS2ID = int(self.line_SysRS2.text())
-        SysRS3ID = int(self.line_SysRS3.text())
-        SwRS1ID = int(self.line_SwRS1.text())
-        SwRS2ID = int(self.line_SwRS2.text())
-        SwRS3ID = int(self.line_SwRS3.text())
-        SysTCID = int(self.line_SysTC.text())
-        SwTCID = int(self.line_SwTC.text())
-        SysITSID = int(self.line_SysITS.text())
+        if self.line_DocID.text() != "":
+            DocID = str(self.line_DocID.text())
+        if self.line_SysRS1.text() != "":
+            SysRS1ID = str(self.line_SysRS1.text())
+        if self.line_SysRS2.text() != "":
+            SysRS2ID = str(self.line_SysRS2.text())
+        if self.line_SysRS3.text() != "":
+            SysRS3ID = str(self.line_SysRS3.text())
+        if self.line_SwRS1.text() != "":
+            SwRS1ID = str(self.line_SwRS1.text())
+        if self.line_SwRS2.text() != "":
+            SwRS2ID = str(self.line_SwRS2.text())
+        if self.line_SwRS3.text() != "":
+            SwRS3ID = str(self.line_SwRS3.text())
+        if self.line_SysTC.text() != "":
+            SysTCID = str(self.line_SysTC.text())
+        if self.line_SwTC.text() != "":
+            SwTCID = str(self.line_SwTC.text())
+        if self.line_SysITS.text() != "":
+            SysITSID = str(self.line_SysITS.text())
 
         Result_DocID = 'DocID_Info.xls'
         Result_SysRS1 = 'SysRS1_Info.xls'
@@ -139,6 +166,7 @@ class App(QMainWindow):
         def SysID_combined(input1, input2, input3):
             #엑셀 파일 이름
             excel_names = [input1, input2, input3]
+            excel_names = [v for v in excel_names if v]
             excels = [pd.ExcelFile(name) for name in excel_names]
             frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
             frames[1:] = [df[1:] for df in frames[1:]]
@@ -153,6 +181,7 @@ class App(QMainWindow):
         def SwID_combined(input1, input2, input3):
             #엑셀 파일 이름
             excel_names = [input1, input2, input3]
+            excel_names = [v for v in excel_names if v]
             excels = [pd.ExcelFile(name) for name in excel_names]
             frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
             frames[1:] = [df[1:] for df in frames[1:]]
@@ -167,6 +196,7 @@ class App(QMainWindow):
         def SysSwTSID_combined(input1, input2, input3):
             #엑셀 파일 이름
             excel_names = [input1, input2, input3]
+            excel_names = [v for v in excel_names if v]
             excels = [pd.ExcelFile(name) for name in excel_names]
             frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
             frames[1:] = [df[1:] for df in frames[1:]]
@@ -178,7 +208,7 @@ class App(QMainWindow):
             #파일저장
             combined.to_excel("SysSwTSID_Info.xlsx", header=False, index=False)
 
-
+        ########## 기존 파일 삭제 ##########
         if os.path.exists(Result_DocID):
             os.remove(Result_DocID)
         if os.path.exists(Result_SysRS1):
@@ -200,70 +230,102 @@ class App(QMainWindow):
         if os.path.exists(Result_SysSwTS3):
             os.remove(Result_SysSwTS3)
 
-        QueryDefinition_DocID = '((field["Document ID"]=' + DocID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-        QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-        QueryDefinition_SysRS2 = '((field["Document ID"]=' + SysRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-        QueryDefinition_SysRS3 = '((field["Document ID"]=' + SysRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-        QueryDefinition_SwRS1 = '((field["Document ID"]=' + SwRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-        QueryDefinition_SwRS2 = '((field["Document ID"]=' + SwRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-        QueryDefinition_SwRS3 = '((field["Document ID"]=' + SwRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
-        QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
-        QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'      #v2xx.x는 HMC대신 Ferrari
-        QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
-
         itemExportFields_DocID = '"Document ID",ID,"A15 LuK ID",Text,"A05 Safety Integrity","A25 Status Commitment Supplier - MCA LG","A27 Delivery Date","Decomposes To","Short Description"'
         itemExportFields_SysRS = '"Document ID",ID,"ENG ID","Validated By","Satisfied By"'
         itemExportFields_SysSwTS = '"Document ID",ID,"ENG ID","Test Method"'
 
-        export_doc_cmd_DocID = 'im exportissues --outputFile=' + Result_DocID + ' --fields=' + itemExportFields_DocID + ' --sortField=Type --queryDefinition=' + QueryDefinition_DocID + ' --noopenOutputFile'
-        export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
-        export_doc_cmd_SysRS2 = 'im exportissues --outputFile=' + Result_SysRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS2 + ' --noopenOutputFile'
-        export_doc_cmd_SysRS3 = 'im exportissues --outputFile=' + Result_SysRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS3 + ' --noopenOutputFile'
-        export_doc_cmd_SwRS1 = 'im exportissues --outputFile=' + Result_SwRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS1 + ' --noopenOutputFile'
-        export_doc_cmd_SwRS2 = 'im exportissues --outputFile=' + Result_SwRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS2 + ' --noopenOutputFile'
-        export_doc_cmd_SwRS3 = 'im exportissues --outputFile=' + Result_SwRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS3 + ' --noopenOutputFile'
-        export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1 + ' --noopenOutputFile'
-        export_doc_cmd_SysSwTS2 = 'im exportissues --outputFile=' + Result_SysSwTS2 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS2 + ' --noopenOutputFile'
-        export_doc_cmd_SysSwTS3 = 'im exportissues --outputFile=' + Result_SysSwTS3 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS3 + ' --noopenOutputFile'
-
         ############# 여기서 파일 생성 실행 ##############
-        subprocess.call(export_doc_cmd_DocID)   
-        subprocess.call(export_doc_cmd_SysRS1)
-        subprocess.call(export_doc_cmd_SysRS2)
-        subprocess.call(export_doc_cmd_SysRS3)
-        subprocess.call(export_doc_cmd_SwRS1)
-        subprocess.call(export_doc_cmd_SwRS2)
-        subprocess.call(export_doc_cmd_SwRS3)
-        subprocess.call(export_doc_cmd_SysSwTS1)
-        subprocess.call(export_doc_cmd_SysSwTS2)
-        subprocess.call(export_doc_cmd_SysSwTS3)
+        if self.line_DocID.text() != "":
+            QueryDefinition_DocID = '((field["Document ID"]=' + DocID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            export_doc_cmd_DocID = 'im exportissues --outputFile=' + Result_DocID + ' --fields=' + itemExportFields_DocID + ' --sortField=Type --queryDefinition=' + QueryDefinition_DocID + ' --noopenOutputFile'
+            #subprocess.call(export_doc_cmd_DocID)
+        if self.line_SysRS1.text() != "":
+            QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
+            #subprocess.call(export_doc_cmd_SysRS1)
+        else:
+            Result_SysRS1 = ""
+        if self.line_SysRS2.text() != "":
+            QueryDefinition_SysRS2 = '((field["Document ID"]=' + SysRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            export_doc_cmd_SysRS2 = 'im exportissues --outputFile=' + Result_SysRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS2 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SysRS2)
+        else:
+            Result_SysRS2 = ""
+        if self.line_SysRS3.text() != "":
+            QueryDefinition_SysRS3 = '((field["Document ID"]=' + SysRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            export_doc_cmd_SysRS3 = 'im exportissues --outputFile=' + Result_SysRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS3 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SysRS3)
+        else:
+            Result_SysRS3 = ""
+        if self.line_SwRS1.text() != "":
+            QueryDefinition_SwRS1 = '((field["Document ID"]=' + SwRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            export_doc_cmd_SwRS1 = 'im exportissues --outputFile=' + Result_SwRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS1 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SwRS1)
+        else:
+            Result_SwRS1 = ""
+        if self.line_SwRS2.text() != "":
+            QueryDefinition_SwRS2 = '((field["Document ID"]=' + SwRS2ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            export_doc_cmd_SwRS2 = 'im exportissues --outputFile=' + Result_SwRS2 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS2 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SwRS2)
+        else:
+            Result_SwRS2 = ""
+        if self.line_SwRS3.text() != "":
+            QueryDefinition_SwRS3 = '((field["Document ID"]=' + SwRS3ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            export_doc_cmd_SwRS3 = 'im exportissues --outputFile=' + Result_SwRS3 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SwRS3 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SwRS3)
+        else:
+            Result_SwRS3 = ""
+        if self.line_SysTC.text() != "":
+            QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
+            export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SysSwTS1)
+        else:
+            Result_SysSwTS1 = ""
+        if self.line_SwTC.text() != "":
+            QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'      #v2xx.x는 HMC대신 Ferrari
+            export_doc_cmd_SysSwTS2 = 'im exportissues --outputFile=' + Result_SysSwTS2 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS2 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SysSwTS2)
+        else:
+            Result_SysSwTS2 = ""
+        if self.line_SysITS.text() != "":
+            QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))and(field["MCA OEM"]="Ferrari"))'
+            export_doc_cmd_SysSwTS3 = 'im exportissues --outputFile=' + Result_SysSwTS3 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS3 + ' --noopenOutputFile'
+            subprocess.call(export_doc_cmd_SysSwTS3)
+        else:
+            Result_SysSwTS3 = ""
 
         ############## SysID, SwID, SysSwTSID 파일 통합 ##############
         SysID_combined(Result_SysRS1, Result_SysRS2, Result_SysRS3)
         SwID_combined(Result_SwRS1, Result_SwRS2, Result_SwRS3)
         SysSwTSID_combined(Result_SysSwTS1, Result_SysSwTS2, Result_SysSwTS3)
+        QMessageBox.about(self, "Base File 알림", "Base File 생성완료")
 
 
     def btn2_clicked(self):
-        QMessageBox.about(self, "TestSession 알림", "TestSession 읽기완료")
-        test_session_txt = 'testsession.txt'
-        try:
-            with open(test_session_txt, 'rt') as in_file:
-                for line in in_file:
-                    test_session_id = line  # test_session_txt 파일에 1줄마다 읽어드림
+        global test_session_id
+        fileOpen = QFileDialog.getOpenFileName(self, 'Open file', './')
+        if fileOpen[0]:
+            f = open(fileOpen[0], 'r')
+            with f:
+                data = f.read()
+                try:
+                    test_session_id = data  # test_session_txt 파일에 1줄마다 읽어드림
                     test_session_id = test_session_id.split(',')  # ,로 문자열 리스트화에서 구별
-                len_test_session_id = len(test_session_id)
-        except:
-            print("Please make a testsession.txt file with test session id. e.g. 1495334, 1495339, 1495343, 1495344")  # test_seesion_txt 파일에 아무것도 데이터가 없을때 또는 ,로 구분안갈때
-            subprocess.check_output("pause", shell=True)
+                    len_test_session_id = len(test_session_id)
+                except:
+                    print("Please make a testsession.txt file with test session id. e.g. 1495334, 1495339, 1495343, 1495344")  # test_seesion_txt 파일에 아무것도 데이터가 없을때 또는 ,로 구분안갈때
+                    subprocess.check_output("pause", shell=True)
+                print(data)
+                print(len_test_session_id)
+                QMessageBox.about(self, "TestSession 알림", "TestSession 읽기완료")
+        else:
+            QMessageBox.about(self, "TestSession 알림", "TestSession 읽기실패")
 
 
 
     def btn3_clicked(self):
         QMessageBox.about(self, "TestResult 알림", "TestResult 생성중")
-
         TestResult_csv = "TestResult_Info.csv"
-
         def TestResult_Info():
             global test_session_txt
             global TestResult_csv
@@ -307,7 +369,6 @@ class App(QMainWindow):
 
         TestResult_Info()
         QMessageBox.about(self, "TestResult 알림", "TestResult 생성 완료")
-
 
 
     def btn4_clicked(self):
@@ -582,6 +643,8 @@ class App(QMainWindow):
         #### 데이터 입력 종료 ####
         wb_write.save(write_xlsx)
         wb_write.close()
+        QMessageBox.about(self, "Trace Matrix 알림", "Trace Matrix 생성완료")
+
 
 
 
