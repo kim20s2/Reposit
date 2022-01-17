@@ -1,6 +1,15 @@
-#import numpy.random.common
-#import numpy.random.bounded_integers
-#import numpy.random.entropy
+"""
+CopyRight LG Innotek
+2022.01.17
+Sung Hwan Kim
+
+
+
+
+"""
+import numpy.random.common
+import numpy.random.bounded_integers
+import numpy.random.entropy
 import pandas as pd
 import sys
 from PyQt5 import *
@@ -34,6 +43,11 @@ cr_delivery_milestone = 0
 verification_status = 'not finished'
 TC_Review_Status = 0
 write_xlsx = "TraceMatrix.xlsx"
+OEM_Filter = ""
+OEM_Filter_Error1 = 0
+OEM_Filter_Error2 = 0
+OEM_Filter_Error_Signal = 0
+
 
 class App(QMainWindow):
 
@@ -44,10 +58,12 @@ class App(QMainWindow):
 
 
     def initUI(self):
+        global cb1
+        global cb2
 
         self.setWindowTitle("Trace Matrix Making Tool (Ver. 0.1)")
         self.setWindowIcon(QIcon('web.png'))
-        self.resize(500, 350)
+        self.resize(490, 350)
 
         exitAction = QAction('Exit', self)
         exitAction.setShortcut('Ctrl+Q')
@@ -55,27 +71,40 @@ class App(QMainWindow):
         exitAction.triggered.connect(qApp.quit)
 
         self.statusBar().showMessage(self.date.toString(Qt.DefaultLocaleLongDate))
+        text_label = QLabel(self)
+        text_label.move(370, 325)
+        text_label.setText("Made By S.Kim")
 
         menubar = self.menuBar()
         menubar.setNativeMenuBar(False)
         filemenu = menubar.addMenu('&File')
         filemenu.addAction(exitAction)
 
+
+        cb1 = QCheckBox("HMC", self)
+        cb1.move(130, 100)
+        cb1.clicked.connect(self.EnableOEM_HMC_Filter)
+
+        cb2 = QCheckBox("Ferrari", self)
+        cb2.move(200, 100)
+        cb2.clicked.connect(self.EnableOEM_Ferrari_Filter)
+
+
         text_label = QLabel(self)
         text_label.move(10, 20)
-        text_label.setText('User ID 입력')
+        text_label.setText('User ID')
         self.line_UserID = QLineEdit(self)
         self.line_UserID.move(10, 45)
 
         text_label = QLabel(self)
         text_label.move(110, 20)
-        text_label.setText('Password 입력')
+        text_label.setText('Password')
         self.line_PW = QLineEdit(self)
         self.line_PW.move(110, 45)
 
         text_label = QLabel(self)
         text_label.move(10, 90)
-        text_label.setText('DocID')
+        text_label.setText('CR DocID')
         self.line_DocID = QLineEdit(self)
         self.line_DocID.move(10, 115)
 
@@ -117,21 +146,21 @@ class App(QMainWindow):
 
         text_label = QLabel(self)
         text_label.move(10, 240)
-        text_label.setText('SysTC')
-        self.line_SysTC = QLineEdit(self)
-        self.line_SysTC.move(10, 265)
+        text_label.setText('SwTS')
+        self.line_SwTC = QLineEdit(self)
+        self.line_SwTC.move(10, 265)
 
         text_label = QLabel(self)
         text_label.move(110, 240)
-        text_label.setText('SwTC 입력')
-        self.line_SwTC = QLineEdit(self)
-        self.line_SwTC.move(110, 265)
+        text_label.setText('SysITS')
+        self.line_SysITS = QLineEdit(self)
+        self.line_SysITS.move(110, 265)
 
         text_label = QLabel(self)
         text_label.move(210, 240)
-        text_label.setText('SysITS 입력')
-        self.line_SysITS = QLineEdit(self)
-        self.line_SysITS.move(210, 265)
+        text_label.setText('SysTS')
+        self.line_SysTC = QLineEdit(self)
+        self.line_SysTC.move(210, 265)
 
         text_label = QLabel(self)
         text_label.move(330, 95)
@@ -173,8 +202,51 @@ class App(QMainWindow):
         btn5.move(350, 40)
         btn5.resize(btn5.sizeHint())
 
+    def EnableOEM_HMC_Filter(self):
+        global OEM_Filter
+        global OEM_Filter_Error1
+        global OEM_Filter_Error2
+
+        if cb1.isChecked():
+            OEM_Filter = """field["MCA OEM"]="HMC")"""
+            OEM_Filter_Error1 = 1
+        else:
+            OEM_Filter = ""
+            OEM_Filter_Error1 = 0
+
+        if (OEM_Filter_Error1 * OEM_Filter_Error2) == 1:
+            QMessageBox.about(self, "Warning", "HMC 또는 Ferrari중 하나만 선택하세요!")
+            cb1.toggle()
+            cb2.toggle()
+            OEM_Filter = ""
+            OEM_Filter_Error1 = 0
+            OEM_Filter_Error2 = 0
+
+    def EnableOEM_Ferrari_Filter(self):
+        global OEM_Filter
+        global OEM_Filter_Error1
+        global OEM_Filter_Error2
+
+        if cb2.isChecked():
+            OEM_Filter = """field["MCA OEM"]="Ferrari")"""
+            OEM_Filter_Error2 = 1
+        else:
+            OEM_Filter = ""
+            OEM_Filter_Error2 = 0
+
+        if (OEM_Filter_Error1 * OEM_Filter_Error2) == 1:
+            QMessageBox.about(self, "Warning", "HMC 또는 Ferrari중 하나만 선택하세요!")
+            cb1.toggle()
+            cb2.toggle()
+            OEM_Filter = ""
+            OEM_Filter_Error1 = 0
+            OEM_Filter_Error2 = 0
+
+
         #### actions ####
     def btn1_clicked(self):
+        global OEM_Filter
+
         if self.line_DocID.text() != "":
             DocID = str(self.line_DocID.text())
         if self.line_SysRS1.text() != "":
@@ -286,7 +358,7 @@ class App(QMainWindow):
             subprocess.call(export_doc_cmd_DocID)
         else:
             Result_DocID = ""
-            QMessageBox.about(self, "Warning", "DocID가 입력되지 않았습니다.")
+            QMessageBox.about(self, "Warning", "CR DocID가 입력되지 않았습니다.")
         if self.line_SysRS1.text() != "":
             QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
             export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
@@ -324,19 +396,19 @@ class App(QMainWindow):
         else:
             Result_SwRS3 = ""
         if self.line_SysTC.text() != "":
-            QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))' + OEM_Filter + ')'
             export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1 + ' --noopenOutputFile'
             subprocess.call(export_doc_cmd_SysSwTS1)
         else:
             Result_SysSwTS1 = ""
         if self.line_SwTC.text() != "":
-            QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'      #v2xx.x는 HMC대신 Ferrari
+            QueryDefinition_SysSwTS2 = '((field["Document ID"]=' + SwTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))' + OEM_Filter + ')'      #v2xx.x는 HMC대신 Ferrari
             export_doc_cmd_SysSwTS2 = 'im exportissues --outputFile=' + Result_SysSwTS2 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS2 + ' --noopenOutputFile'
             subprocess.call(export_doc_cmd_SysSwTS2)
         else:
             Result_SysSwTS2 = ""
         if self.line_SysITS.text() != "":
-            QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
+            QueryDefinition_SysSwTS3 = '((field["Document ID"]=' + SysITSID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))' + OEM_Filter + ')'
             export_doc_cmd_SysSwTS3 = 'im exportissues --outputFile=' + Result_SysSwTS3 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS3 + ' --noopenOutputFile'
             subprocess.call(export_doc_cmd_SysSwTS3)
         else:
