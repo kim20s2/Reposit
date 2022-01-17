@@ -1,6 +1,6 @@
-import numpy.random.common
-import numpy.random.bounded_integers
-import numpy.random.entropy
+#import numpy.random.common
+#import numpy.random.bounded_integers
+#import numpy.random.entropy
 import pandas as pd
 import sys
 from PyQt5 import *
@@ -45,7 +45,7 @@ class App(QMainWindow):
 
     def initUI(self):
 
-        self.setWindowTitle('Trace Matrix Making Tool')
+        self.setWindowTitle("Trace Matrix Making Tool (Ver. 0.1)")
         self.setWindowIcon(QIcon('web.png'))
         self.resize(500, 350)
 
@@ -63,99 +63,114 @@ class App(QMainWindow):
 
         text_label = QLabel(self)
         text_label.move(10, 20)
+        text_label.setText('User ID 입력')
+        self.line_UserID = QLineEdit(self)
+        self.line_UserID.move(10, 45)
+
+        text_label = QLabel(self)
+        text_label.move(110, 20)
+        text_label.setText('Password 입력')
+        self.line_PW = QLineEdit(self)
+        self.line_PW.move(110, 45)
+
+        text_label = QLabel(self)
+        text_label.move(10, 90)
         text_label.setText('DocID')
         self.line_DocID = QLineEdit(self)
-        self.line_DocID.move(10, 45)
+        self.line_DocID.move(10, 115)
 
         text_label = QLabel(self)
-        text_label.move(10, 70)
+        text_label.move(10, 140)
         text_label.setText('SysRS #1')
         self.line_SysRS1 = QLineEdit(self)
-        self.line_SysRS1.move(10, 95)
+        self.line_SysRS1.move(10, 165)
 
         text_label = QLabel(self)
-        text_label.move(110, 70)
+        text_label.move(110, 140)
         text_label.setText('SysRS #2')
         self.line_SysRS2 = QLineEdit(self)
-        self.line_SysRS2.move(110, 95)
+        self.line_SysRS2.move(110, 165)
 
         text_label = QLabel(self)
-        text_label.move(210, 70)
+        text_label.move(210, 140)
         text_label.setText('SysRS #3')
         self.line_SysRS3 = QLineEdit(self)
-        self.line_SysRS3.move(210, 95)
+        self.line_SysRS3.move(210, 165)
 
         text_label = QLabel(self)
-        text_label.move(10, 120)
+        text_label.move(10, 190)
         text_label.setText('SwRS #1')
         self.line_SwRS1 = QLineEdit(self)
-        self.line_SwRS1.move(10, 145)
+        self.line_SwRS1.move(10, 215)
 
         text_label = QLabel(self)
-        text_label.move(110, 120)
+        text_label.move(110, 190)
         text_label.setText('SwRS #2')
         self.line_SwRS2 = QLineEdit(self)
-        self.line_SwRS2.move(110, 145)
+        self.line_SwRS2.move(110, 215)
 
         text_label = QLabel(self)
-        text_label.move(210, 120)
+        text_label.move(210, 190)
         text_label.setText('SwRS #3')
         self.line_SwRS3 = QLineEdit(self)
-        self.line_SwRS3.move(210, 145)
-
-        text_label = QLabel(self)
-        text_label.move(10, 170)
-        text_label.setText('SysTC')
-        self.line_SysTC = QLineEdit(self)
-        self.line_SysTC.move(10, 195)
-
-        text_label = QLabel(self)
-        text_label.move(110, 170)
-        text_label.setText('SwTC 입력')
-        self.line_SwTC = QLineEdit(self)
-        self.line_SwTC.move(110, 195)
-
-        text_label = QLabel(self)
-        text_label.move(210, 170)
-        text_label.setText('SysITS 입력')
-        self.line_SysITS = QLineEdit(self)
-        self.line_SysITS.move(210, 195)
+        self.line_SwRS3.move(210, 215)
 
         text_label = QLabel(self)
         text_label.move(10, 240)
-        text_label.setText('User ID 입력')
-        self.line_UserID = QLineEdit(self)
-        self.line_UserID.move(10, 265)
+        text_label.setText('SysTC')
+        self.line_SysTC = QLineEdit(self)
+        self.line_SysTC.move(10, 265)
 
         text_label = QLabel(self)
         text_label.move(110, 240)
-        text_label.setText('Password 입력')
-        self.line_PW = QLineEdit(self)
-        self.line_PW.move(110, 265)
+        text_label.setText('SwTC 입력')
+        self.line_SwTC = QLineEdit(self)
+        self.line_SwTC.move(110, 265)
 
+        text_label = QLabel(self)
+        text_label.move(210, 240)
+        text_label.setText('SysITS 입력')
+        self.line_SysITS = QLineEdit(self)
+        self.line_SysITS.move(210, 265)
+
+        text_label = QLabel(self)
+        text_label.move(330, 95)
+        text_label.setText('②')
         btn1 = QPushButton('Base File 생성', self)
         btn1.clicked.connect(self.btn1_clicked)
-        btn1.move(350, 50)
+        btn1.move(350, 100)
         btn1.resize(btn1.sizeHint())
 
+        text_label = QLabel(self)
+        text_label.move(330, 125)
+        text_label.setText('③')
         btn2 = QPushButton('Testsession.txt 읽기', self)
         btn2.clicked.connect(self.btn2_clicked)
-        btn2.move(350, 80)
+        btn2.move(350, 130)
         btn2.resize(btn2.sizeHint())
 
+        text_label = QLabel(self)
+        text_label.move(330, 155)
+        text_label.setText('④')
         btn3 = QPushButton('TestResult File 생성', self)
         btn3.clicked.connect(self.btn3_clicked)
-        btn3.move(350, 110)
+        btn3.move(350, 160)
         btn3.resize(btn3.sizeHint())
 
+        text_label = QLabel(self)
+        text_label.move(330, 215)
+        text_label.setText('⑤')
         btn4 = QPushButton('Trace Matrix 생성', self)
         btn4.clicked.connect(self.btn4_clicked)
-        btn4.move(350, 200)
+        btn4.move(350, 220)
         btn4.resize(btn4.sizeHint())
 
+        text_label = QLabel(self)
+        text_label.move(330, 35)
+        text_label.setText('①')
         btn5 = QPushButton('Integrity Server 로그인', self)
         btn5.clicked.connect(self.btn5_clicked)
-        btn5.move(350, 250)
+        btn5.move(350, 40)
         btn5.resize(btn5.sizeHint())
 
         #### actions ####
@@ -271,6 +286,7 @@ class App(QMainWindow):
             subprocess.call(export_doc_cmd_DocID)
         else:
             Result_DocID = ""
+            QMessageBox.about(self, "Warning", "DocID가 입력되지 않았습니다.")
         if self.line_SysRS1.text() != "":
             QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
             export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
