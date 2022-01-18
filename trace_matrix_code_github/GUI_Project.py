@@ -1,15 +1,13 @@
 """
-CopyRight LG Innotek
-2022.01.17
-Sung Hwan Kim
+CopyRight ⓒ 2022, SungHwan Kim
 
+2022. 01. 19 Ver. 0.2 completed
 
-
-
+This library is free software;
 """
-import numpy.random.common
-import numpy.random.bounded_integers
-import numpy.random.entropy
+#import numpy.random.common
+#import numpy.random.bounded_integers
+#import numpy.random.entropy
 import pandas as pd
 import sys
 from PyQt5 import *
@@ -42,11 +40,12 @@ cr_short_description = 0
 cr_delivery_milestone = 0
 verification_status = 'not finished'
 TC_Review_Status = 0
-write_xlsx = "TraceMatrix.xlsx"
+write_xlsx = ""
 OEM_Filter = ""
 OEM_Filter_Error1 = 0
 OEM_Filter_Error2 = 0
 OEM_Filter_Error_Signal = 0
+read_xlsx = ""
 
 
 class App(QMainWindow):
@@ -61,9 +60,9 @@ class App(QMainWindow):
         global cb1
         global cb2
 
-        self.setWindowTitle("Trace Matrix Making Tool (Ver. 0.1)")
+        self.setWindowTitle("Trace Matrix Making Tool (Ver. 0.2)")
         self.setWindowIcon(QIcon('web.png'))
-        self.resize(490, 350)
+        self.setFixedSize(490, 350)
 
         exitAction = QAction('Exit', self)
         exitAction.setShortcut('Ctrl+Q')
@@ -73,7 +72,7 @@ class App(QMainWindow):
         self.statusBar().showMessage(self.date.toString(Qt.DefaultLocaleLongDate))
         text_label = QLabel(self)
         text_label.move(370, 325)
-        text_label.setText("Made By S.Kim")
+        text_label.setText("Made By S.H.Kim")
 
         menubar = self.menuBar()
         menubar.setNativeMenuBar(False)
@@ -81,12 +80,17 @@ class App(QMainWindow):
         filemenu.addAction(exitAction)
 
 
+        text_label = QLabel(self)
+        text_label.move(150, 90)
+        text_label.setText("OEM Filter 여부")
+
+
         cb1 = QCheckBox("HMC", self)
-        cb1.move(130, 100)
+        cb1.move(150, 110)
         cb1.clicked.connect(self.EnableOEM_HMC_Filter)
 
         cb2 = QCheckBox("Ferrari", self)
-        cb2.move(200, 100)
+        cb2.move(220, 110)
         cb2.clicked.connect(self.EnableOEM_Ferrari_Filter)
 
 
@@ -163,44 +167,69 @@ class App(QMainWindow):
         self.line_SysTC.move(210, 265)
 
         text_label = QLabel(self)
-        text_label.move(330, 95)
-        text_label.setText('②')
-        btn1 = QPushButton('Base File 생성', self)
-        btn1.clicked.connect(self.btn1_clicked)
-        btn1.move(350, 100)
-        btn1.resize(btn1.sizeHint())
+        text_label.move(340, 190)
+        text_label.setText('출력 파일명 입력')
+        self.line_ResultName = QLineEdit(self)
+        self.line_ResultName.move(340, 215)
 
-        text_label = QLabel(self)
-        text_label.move(330, 125)
-        text_label.setText('③')
-        btn2 = QPushButton('Testsession.txt 읽기', self)
-        btn2.clicked.connect(self.btn2_clicked)
-        btn2.move(350, 130)
-        btn2.resize(btn2.sizeHint())
+        btn_ID = QPushButton('ID 저장', self)
+        btn_ID.clicked.connect(self.btn_ID)
+        btn_ID.move(230, 40)
+        btn_ID.resize(btn_ID.sizeHint())
 
-        text_label = QLabel(self)
-        text_label.move(330, 155)
-        text_label.setText('④')
-        btn3 = QPushButton('TestResult File 생성', self)
-        btn3.clicked.connect(self.btn3_clicked)
-        btn3.move(350, 160)
-        btn3.resize(btn3.sizeHint())
-
-        text_label = QLabel(self)
-        text_label.move(330, 215)
-        text_label.setText('⑤')
-        btn4 = QPushButton('Trace Matrix 생성', self)
-        btn4.clicked.connect(self.btn4_clicked)
-        btn4.move(350, 220)
-        btn4.resize(btn4.sizeHint())
+        btn_ID_upload = QPushButton('ID 불러오기', self)
+        btn_ID_upload.clicked.connect(self.btn_ID_upload)
+        btn_ID_upload.move(230, 65)
+        btn_ID_upload.resize(btn_ID_upload.sizeHint())
 
         text_label = QLabel(self)
         text_label.move(330, 35)
         text_label.setText('①')
-        btn5 = QPushButton('Integrity Server 로그인', self)
+        btn1 = QPushButton('Integrity Server 로그인', self)
+        btn1.clicked.connect(self.btn1_clicked)
+        btn1.move(350, 40)
+        btn1.resize(btn1.sizeHint())
+
+        text_label = QLabel(self)
+        text_label.move(330, 65)
+        text_label.setText('②')
+        btn2 = QPushButton('Base File 생성', self)
+        btn2.clicked.connect(self.btn2_clicked)
+        btn2.move(350, 70)
+        btn2.resize(btn2.sizeHint())
+
+        text_label = QLabel(self)
+        text_label.move(330, 95)
+        text_label.setText('③')
+        btn3 = QPushButton('Testsession.txt 읽기', self)
+        btn3.clicked.connect(self.btn3_clicked)
+        btn3.move(350, 100)
+        btn3.resize(btn3.sizeHint())
+
+        text_label = QLabel(self)
+        text_label.move(330, 125)
+        text_label.setText('④')
+        btn4 = QPushButton('Read File 읽기', self)
+        btn4.clicked.connect(self.btn4_clicked)
+        btn4.move(350, 130)
+        btn4.resize(btn4.sizeHint())
+
+        text_label = QLabel(self)
+        text_label.move(330, 155)
+        text_label.setText('⑤')
+        btn5 = QPushButton('TestResult File 생성', self)
         btn5.clicked.connect(self.btn5_clicked)
-        btn5.move(350, 40)
+        btn5.move(350, 160)
         btn5.resize(btn5.sizeHint())
+
+        text_label = QLabel(self)
+        text_label.move(330, 260)
+        text_label.setText('⑥')
+        btn6 = QPushButton('Trace Matrix 생성', self)
+        btn6.clicked.connect(self.btn6_clicked)
+        btn6.move(350, 265)
+        btn6.resize(btn6.sizeHint())
+
 
     def EnableOEM_HMC_Filter(self):
         global OEM_Filter
@@ -242,9 +271,33 @@ class App(QMainWindow):
             OEM_Filter_Error1 = 0
             OEM_Filter_Error2 = 0
 
+    def btn_ID(self):
+        return
+
+    def btn_ID_upload(self):
+        return
+
+
+    def btn1_clicked(self):
+        if self.line_UserID.text() != "":
+            user_id_pw0 = str(self.line_UserID.text())
+            temp1 = 1
+        else:
+            QMessageBox.about(self, "Warning", "User ID가 입력되지 않았습니다.")
+            temp1 = 0
+        if self.line_PW.text() != "":
+            user_id_pw1 = str(self.line_PW.text())
+            temp2 = 1
+        else:
+            QMessageBox.about(self, "Warning", "Password가 입력되지 않았습니다.")
+            temp2 = 0
+
+        if temp1 * temp2 == 1:
+            connect_command = 'si connect --user=' + user_id_pw0 + ' --password=' + user_id_pw1
+            subprocess.call(connect_command, shell=True)
 
         #### actions ####
-    def btn1_clicked(self):
+    def btn2_clicked(self):
         global OEM_Filter
 
         if self.line_DocID.text() != "":
@@ -441,7 +494,7 @@ class App(QMainWindow):
         QMessageBox.about(self, "Base File 알림", "Base File 생성완료")
 
 
-    def btn2_clicked(self):
+    def btn3_clicked(self):
         global test_session_id
         global len_test_session_id
         fileOpen = QFileDialog.getOpenFileName(self, 'Open file', './')
@@ -462,8 +515,19 @@ class App(QMainWindow):
         else:
             QMessageBox.about(self, "TestSession 알림", "TestSession 읽기실패")
 
+    def btn4_clicked(self):
+        global read_xlsx
+        read_file = QFileDialog.getOpenFileName(self, 'Open file', './')
+        if read_file[0]:
+            read_xlsx = read_file[0]
+            print(read_xlsx)
+            QMessageBox.about(self, "Read file 읽기알림", "Read file 읽기완료")
+        else:
+            QMessageBox.about(self, "Read file 읽기알림", "Read file 읽기실패")
 
-    def btn3_clicked(self):
+
+
+    def btn5_clicked(self):
         global test_session_id
         global len_test_session_id
         global TestResult_csv
@@ -496,7 +560,7 @@ class App(QMainWindow):
         QMessageBox.about(self, "TestResult 알림", "TestResult 생성 완료")
 
 
-    def btn4_clicked(self):
+    def btn6_clicked(self):
         global row_cr
         global row_tc
         global user_id_pw
@@ -509,13 +573,18 @@ class App(QMainWindow):
         global TC_Review_Status
         global TestResult_csv
         global write_xlsx
+        global read_xlsx
+
+        if self.line_ResultName.text() != "":
+            write_xlsx = str(self.line_ResultName.text()) + ".xlsx"
+        else:
+            QMessageBox.about(self, "출력 파일명 입력 알림", "출력 파일명을 입력하세요.")
 
         implementation_criteria = 12
         row_temp_first = 2
         row_temp = 2
         minor_criteria = 'Patch#2'
 
-        read_xlsx = "read_v104.7.xls"
         DocID_Info_xls = "DocID_Info.xls"
         SysID_Info_xls = "SysID_Info.xlsx"
         SwID_Info_xls = "SwID_Info.xlsx"
@@ -767,23 +836,6 @@ class App(QMainWindow):
         wb_write.close()
         QMessageBox.about(self, "Trace Matrix 알림", "Trace Matrix 생성완료")
 
-    def btn5_clicked(self):
-        if self.line_UserID.text() != "":
-            user_id_pw0 = str(self.line_UserID.text())
-            temp1 = 1
-        else:
-            QMessageBox.about(self, "Warning", "User ID가 입력되지 않았습니다.")
-            temp1 = 0
-        if self.line_PW.text() != "":
-            user_id_pw1 = str(self.line_PW.text())
-            temp2 = 1
-        else:
-            QMessageBox.about(self, "Warning", "Password가 입력되지 않았습니다.")
-            temp2 = 0
-
-        if temp1 * temp2 == 1:
-            connect_command = 'si connect --user=' + user_id_pw0 + ' --password=' + user_id_pw1
-            subprocess.call(connect_command, shell=True)
 
 
 if __name__ == '__main__':
