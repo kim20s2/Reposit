@@ -272,10 +272,42 @@ class App(QMainWindow):
             OEM_Filter_Error2 = 0
 
     def btn_ID(self):
-        return
+        f = open('Saved ID.txt', 'w')
+        f.write(str(self.line_DocID.text()) + '\n')
+        f.write(str(self.line_SysRS1.text()) + '\n')
+        f.write(str(self.line_SysRS2.text()) + '\n')
+        f.write(str(self.line_SysRS3.text()) + '\n')
+        f.write(str(self.line_SwRS1.text()) + '\n')
+        f.write(str(self.line_SwRS2.text()) + '\n')
+        f.write(str(self.line_SwRS3.text()) + '\n')
+        f.write(str(self.line_SwTC.text()) + '\n')
+        f.write(str(self.line_SysITS.text()) + '\n')
+        f.write(str(self.line_SysTC.text()) + '\n')
+        f.close
+        QMessageBox.about(self, "Warning", "ID 저장 완료")
 
     def btn_ID_upload(self):
-        return
+        fileOpen = QFileDialog.getOpenFileName(self, 'Open file', './')
+        if fileOpen[0]:
+            f = open(fileOpen[0], 'r')
+            with f:
+                line = f.readlines()
+        else:
+            return
+
+        for i in range(len(line)):
+            line[i] = line[i].replace('\n', "")
+
+        self.line_DocID.setText(line[0])
+        self.line_SysRS1.setText(line[1])
+        self.line_SysRS2.setText(line[2])
+        self.line_SysRS3.setText(line[3])
+        self.line_SwRS1.setText(line[4])
+        self.line_SwRS2.setText(line[5])
+        self.line_SwRS3.setText(line[6])
+        self.line_SwTC.setText(line[7])
+        self.line_SysITS.setText(line[8])
+        self.line_SysTC.setText(line[9])
 
 
     def btn1_clicked(self):
@@ -412,6 +444,7 @@ class App(QMainWindow):
         else:
             Result_DocID = ""
             QMessageBox.about(self, "Warning", "CR DocID가 입력되지 않았습니다.")
+            return
         if self.line_SysRS1.text() != "":
             QueryDefinition_SysRS1 = '((field["Document ID"]=' + SysRS1ID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment")))'
             export_doc_cmd_SysRS1 = 'im exportissues --outputFile=' + Result_SysRS1 + ' --fields=' + itemExportFields_SysRS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysRS1 + ' --noopenOutputFile'
@@ -513,7 +546,7 @@ class App(QMainWindow):
                 print(len_test_session_id)
                 QMessageBox.about(self, "TestSession 알림", "TestSession 읽기완료")
         else:
-            QMessageBox.about(self, "TestSession 알림", "TestSession 읽기실패")
+            return
 
     def btn4_clicked(self):
         global read_xlsx
@@ -523,7 +556,7 @@ class App(QMainWindow):
             print(read_xlsx)
             QMessageBox.about(self, "Read file 읽기알림", "Read file 읽기완료")
         else:
-            QMessageBox.about(self, "Read file 읽기알림", "Read file 읽기실패")
+            return
 
 
 
