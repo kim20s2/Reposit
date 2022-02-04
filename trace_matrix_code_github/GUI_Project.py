@@ -1,7 +1,15 @@
 """
 CopyRight ⓒ 2022, SungHwan Kim
 
+2022. 01. xx Ver. 0.1 completed
+- 1차 UI 생성
 2022. 01. 19 Ver. 0.2 completed
+- ID 저장기능 추가
+- 오류 수정
+2022. 02. 04 Ver. 0.3 processing
+- ID 저장시 네이밍 기능 추가
+- 실행시 cmd창 제거
+- 실행시 오류창 제거
 
 This library is free software;
 """
