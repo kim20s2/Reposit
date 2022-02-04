@@ -62,7 +62,7 @@ class App(QMainWindow):
 
         self.setWindowTitle("Trace Matrix Making Tool (Ver. 0.2)")
         self.setWindowIcon(QIcon('web.png'))
-        self.setFixedSize(490, 350)
+        self.setFixedSize(490, 400)
 
         exitAction = QAction('Exit', self)
         exitAction.setShortcut('Ctrl+Q')
@@ -71,7 +71,7 @@ class App(QMainWindow):
 
         self.statusBar().showMessage(self.date.toString(Qt.DefaultLocaleLongDate))
         text_label = QLabel(self)
-        text_label.move(370, 325)
+        text_label.move(370, 375)
         text_label.setText("Made By S.H.Kim")
 
         menubar = self.menuBar()
@@ -81,18 +81,23 @@ class App(QMainWindow):
 
 
         text_label = QLabel(self)
-        text_label.move(150, 90)
+        text_label.move(120, 80)
         text_label.setText("OEM Filter 여부")
 
 
-        cb1 = QCheckBox("HMC", self)
-        cb1.move(150, 110)
-        cb1.clicked.connect(self.EnableOEM_HMC_Filter)
+        cb1 = QCheckBox("적용 X", self)
+        cb1.move(120, 100)
+        cb1.clicked.connect(self.Disable_OEM_Filter)
 
-        cb2 = QCheckBox("Ferrari", self)
-        cb2.move(220, 110)
-        cb2.clicked.connect(self.EnableOEM_Ferrari_Filter)
+        cb2 = QCheckBox("적용 O", self)
+        cb2.move(200, 100)
+        cb2.clicked.connect(self.Enable_OEM_Filter)
 
+        self.label1 = QLabel(self)
+        self.label1.move(120, 120)
+
+        self.label2 = QLabel(self)
+        self.label2.move(220, 120)
 
         text_label = QLabel(self)
         text_label.move(10, 20)
@@ -107,79 +112,79 @@ class App(QMainWindow):
         self.line_PW.move(110, 45)
 
         text_label = QLabel(self)
-        text_label.move(10, 90)
+        text_label.move(10, 140)
         text_label.setText('CR DocID')
         self.line_DocID = QLineEdit(self)
-        self.line_DocID.move(10, 115)
-
-        text_label = QLabel(self)
-        text_label.move(10, 140)
-        text_label.setText('SysRS #1')
-        self.line_SysRS1 = QLineEdit(self)
-        self.line_SysRS1.move(10, 165)
-
-        text_label = QLabel(self)
-        text_label.move(110, 140)
-        text_label.setText('SysRS #2')
-        self.line_SysRS2 = QLineEdit(self)
-        self.line_SysRS2.move(110, 165)
-
-        text_label = QLabel(self)
-        text_label.move(210, 140)
-        text_label.setText('SysRS #3')
-        self.line_SysRS3 = QLineEdit(self)
-        self.line_SysRS3.move(210, 165)
+        self.line_DocID.move(10, 165)
 
         text_label = QLabel(self)
         text_label.move(10, 190)
-        text_label.setText('SwRS #1')
-        self.line_SwRS1 = QLineEdit(self)
-        self.line_SwRS1.move(10, 215)
+        text_label.setText('SysRS #1')
+        self.line_SysRS1 = QLineEdit(self)
+        self.line_SysRS1.move(10, 215)
 
         text_label = QLabel(self)
         text_label.move(110, 190)
-        text_label.setText('SwRS #2')
-        self.line_SwRS2 = QLineEdit(self)
-        self.line_SwRS2.move(110, 215)
+        text_label.setText('SysRS #2')
+        self.line_SysRS2 = QLineEdit(self)
+        self.line_SysRS2.move(110, 215)
 
         text_label = QLabel(self)
         text_label.move(210, 190)
-        text_label.setText('SwRS #3')
-        self.line_SwRS3 = QLineEdit(self)
-        self.line_SwRS3.move(210, 215)
+        text_label.setText('SysRS #3')
+        self.line_SysRS3 = QLineEdit(self)
+        self.line_SysRS3.move(210, 215)
 
         text_label = QLabel(self)
         text_label.move(10, 240)
-        text_label.setText('SwTS')
-        self.line_SwTC = QLineEdit(self)
-        self.line_SwTC.move(10, 265)
+        text_label.setText('SwRS #1')
+        self.line_SwRS1 = QLineEdit(self)
+        self.line_SwRS1.move(10, 265)
 
         text_label = QLabel(self)
         text_label.move(110, 240)
-        text_label.setText('SysITS')
-        self.line_SysITS = QLineEdit(self)
-        self.line_SysITS.move(110, 265)
+        text_label.setText('SwRS #2')
+        self.line_SwRS2 = QLineEdit(self)
+        self.line_SwRS2.move(110, 265)
 
         text_label = QLabel(self)
         text_label.move(210, 240)
-        text_label.setText('SysTS')
-        self.line_SysTC = QLineEdit(self)
-        self.line_SysTC.move(210, 265)
+        text_label.setText('SwRS #3')
+        self.line_SwRS3 = QLineEdit(self)
+        self.line_SwRS3.move(210, 265)
 
         text_label = QLabel(self)
-        text_label.move(340, 190)
+        text_label.move(10, 290)
+        text_label.setText('SwTS')
+        self.line_SwTC = QLineEdit(self)
+        self.line_SwTC.move(10, 315)
+
+        text_label = QLabel(self)
+        text_label.move(110, 290)
+        text_label.setText('SysITS')
+        self.line_SysITS = QLineEdit(self)
+        self.line_SysITS.move(110, 315)
+
+        text_label = QLabel(self)
+        text_label.move(210, 290)
+        text_label.setText('SysTS')
+        self.line_SysTC = QLineEdit(self)
+        self.line_SysTC.move(210, 315)
+
+        text_label = QLabel(self)
+        text_label.move(340, 240)
         text_label.setText('출력 파일명 입력')
         self.line_ResultName = QLineEdit(self)
-        self.line_ResultName.move(340, 215)
+        self.line_ResultName.move(340, 265)
 
-        btn_ID = QPushButton('ID 저장', self)
-        btn_ID.clicked.connect(self.btn_ID)
-        btn_ID.move(230, 40)
-        btn_ID.resize(btn_ID.sizeHint())
+        btn_ID_save = QPushButton('ID 저장', self)
+        btn_ID_save.clicked.connect(self.btn_ID_save)
+        btn_ID_save.move(10, 90)
+        btn_ID_save.resize(btn_ID_save.sizeHint())
 
         btn_ID_upload = QPushButton('ID 불러오기', self)
         btn_ID_upload.clicked.connect(self.btn_ID_upload)
-        btn_ID_upload.move(230, 65)
+        btn_ID_upload.move(10, 115)
         btn_ID_upload.resize(btn_ID_upload.sizeHint())
 
         text_label = QLabel(self)
@@ -223,56 +228,71 @@ class App(QMainWindow):
         btn5.resize(btn5.sizeHint())
 
         text_label = QLabel(self)
-        text_label.move(330, 260)
+        text_label.move(330, 310)
         text_label.setText('⑥')
         btn6 = QPushButton('Trace Matrix 생성', self)
         btn6.clicked.connect(self.btn6_clicked)
-        btn6.move(350, 265)
+        btn6.move(350, 315)
         btn6.resize(btn6.sizeHint())
 
 
-    def EnableOEM_HMC_Filter(self):
+    def Disable_OEM_Filter(self):
         global OEM_Filter
         global OEM_Filter_Error1
         global OEM_Filter_Error2
 
         if cb1.isChecked():
-            OEM_Filter = """field["MCA OEM"]="HMC")"""
+            OEM_Filter = ''
             OEM_Filter_Error1 = 1
         else:
-            OEM_Filter = ""
+            OEM_Filter = ''
             OEM_Filter_Error1 = 0
 
         if (OEM_Filter_Error1 * OEM_Filter_Error2) == 1:
-            QMessageBox.about(self, "Warning", "HMC 또는 Ferrari중 하나만 선택하세요!")
+            QMessageBox.about(self, "Warning", "적용 O와 X중 하나만 선택하세요!")
             cb1.toggle()
             cb2.toggle()
             OEM_Filter = ""
             OEM_Filter_Error1 = 0
             OEM_Filter_Error2 = 0
 
-    def EnableOEM_Ferrari_Filter(self):
+    def Enable_OEM_Filter(self):
         global OEM_Filter
         global OEM_Filter_Error1
         global OEM_Filter_Error2
 
         if cb2.isChecked():
-            OEM_Filter = """field["MCA OEM"]="Ferrari")"""
+            self.label1.setText('Field name')
+            self.line_Fieldname = QLineEdit("", self)
+            self.line_Fieldname.move(120, 145)
+
+            self.label2.setText('name')
+            self.line_name1 = QLineEdit("", self)
+            self.line_name1.move(220, 145)
+
+            #OEM_Filter = 'and(field["' + str(self.line_Fieldname.text()) + '"]="' + str(self.line_name1.text()) + '")'
             OEM_Filter_Error2 = 1
+            print(OEM_Filter)
         else:
+            self.label1.setText('')
+            self.label2.setText('')
             OEM_Filter = ""
             OEM_Filter_Error2 = 0
 
         if (OEM_Filter_Error1 * OEM_Filter_Error2) == 1:
-            QMessageBox.about(self, "Warning", "HMC 또는 Ferrari중 하나만 선택하세요!")
+            self.label1.setText('')
+            self.label2.setText('')
+            QMessageBox.about(self, "Warning", "적용 O와 X중 하나만 선택하세요!")
             cb1.toggle()
             cb2.toggle()
             OEM_Filter = ""
             OEM_Filter_Error1 = 0
             OEM_Filter_Error2 = 0
 
-    def btn_ID(self):
-        f = open('Saved ID.txt', 'w')
+    def btn_ID_save(self):
+        FileSave = QFileDialog.getSaveFileName(self, 'Save file', './')
+        temp = FileSave[0].split('/')
+        f = open(temp[5] + '.txt', 'w')
         f.write(str(self.line_DocID.text()) + '\n')
         f.write(str(self.line_SysRS1.text()) + '\n')
         f.write(str(self.line_SysRS2.text()) + '\n')
@@ -484,6 +504,7 @@ class App(QMainWindow):
         if self.line_SysTC.text() != "":
             QueryDefinition_SysSwTS1 = '((field["Document ID"]=' + SysTCID + ')and(field["Project"]="/Schaeffler MCA LCU")and(item.live)and(item.meaningful)and("disabled not"(field["Category"]="Heading","Comment"))' + OEM_Filter + ')'
             export_doc_cmd_SysSwTS1 = 'im exportissues --outputFile=' + Result_SysSwTS1 + ' --fields=' + itemExportFields_SysSwTS + ' --sortField=Type --queryDefinition=' + QueryDefinition_SysSwTS1 + ' --noopenOutputFile'
+            print(QueryDefinition_SysRS1)
             subprocess.call(export_doc_cmd_SysSwTS1)
         else:
             Result_SysSwTS1 = ""
